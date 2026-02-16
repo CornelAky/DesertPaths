@@ -93,7 +93,7 @@ public class BookingController : Controller
         }
 
         // Validate travel date (must be at least 7 days in the future)
-        if (model.TravelDate < DateTime.Today.AddDays(7))
+        if (model.TravelDate < DateOnly.FromDateTime(DateTime.UtcNow).AddDays(7).ToDateTime(TimeOnly.MinValue))
         {
             ModelState.AddModelError("TravelDate", "Travel date must be at least 7 days from today");
         }
