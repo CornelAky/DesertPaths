@@ -9,17 +9,30 @@
 <div class="card" style="max-width: 900px;">
     <div class="card-header">Edit: @Model.Title</div>
     <div class="card-body">
+        @if (TempData["Debug"] != null)
+        {
+            <div class="alert" style="background: #fef3c7; border: 1px solid #fcd34d; color: #92400e; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                <strong>Debug Info:</strong> @TempData["Debug"]
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger" style="background: #fee2e2; border: 1px solid #fecaca; color: #991b1b; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                <strong>Error:</strong> @TempData["Error"]
+            </div>
+        }
+
         <form asp-action="EditJourney" method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="CreatedAt" />
-            
+
             <div class="grid-2">
                 <div class="form-group">
                     <label asp-for="Title" class="form-label">Title *</label>
                     <input asp-for="Title" class="form-control" required />
                 </div>
-                
+
                 <div class="form-group">
                     <label asp-for="Slug" class="form-label">Slug</label>
                     <input asp-for="Slug" class="form-control" />

@@ -109,6 +109,15 @@ public class AdminController : Controller
     {
         if (id != land.Id) return NotFound();
 
+        // Generate slug if empty
+        if (string.IsNullOrEmpty(land.Slug))
+        {
+            land.Slug = GenerateSlug(land.Name);
+        }
+
+        // Remove navigation property errors
+        ModelState.Remove("Journeys");
+
         if (ModelState.IsValid)
         {
             try
@@ -116,15 +125,21 @@ public class AdminController : Controller
                 _context.Update(land);
                 await _context.SaveChangesAsync();
                 TempData["Success"] = "Land updated successfully!";
+                return RedirectToAction(nameof(Lands));
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!await _context.Lands.AnyAsync(l => l.Id == id))
-                    return NotFound();
-                throw;
+                TempData["Error"] = $"Database error: {ex.Message}";
             }
-            return RedirectToAction(nameof(Lands));
         }
+
+        // Log errors
+        var errors = ModelState
+            .Where(x => x.Value?.Errors.Count > 0)
+            .Select(x => $"{x.Key}: {string.Join(", ", x.Value!.Errors.Select(e => e.ErrorMessage))}")
+            .ToList();
+        TempData["Debug"] = string.Join(" | ", errors);
+
         return View(land);
     }
 
@@ -228,6 +243,20 @@ public class AdminController : Controller
     {
         if (id != journey.Id) return NotFound();
 
+        // Generate slug if empty
+        if (string.IsNullOrEmpty(journey.Slug))
+        {
+            journey.Slug = GenerateSlug(journey.Title);
+        }
+
+        // Remove ALL navigation property errors
+        ModelState.Remove("Land");
+        ModelState.Remove("DefaultStyle");
+        ModelState.Remove("Itineraries");
+        ModelState.Remove("Images");
+        ModelState.Remove("Bookings");
+        ModelState.Remove("Reviews");
+
         if (ModelState.IsValid)
         {
             try
@@ -235,15 +264,21 @@ public class AdminController : Controller
                 _context.Update(journey);
                 await _context.SaveChangesAsync();
                 TempData["Success"] = "Journey updated successfully!";
+                return RedirectToAction(nameof(Journeys));
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!await _context.Journeys.AnyAsync(j => j.Id == id))
-                    return NotFound();
-                throw;
+                TempData["Error"] = $"Database error: {ex.Message}";
             }
-            return RedirectToAction(nameof(Journeys));
         }
+
+        // Log errors
+        var errors = ModelState
+            .Where(x => x.Value?.Errors.Count > 0)
+            .Select(x => $"{x.Key}: {string.Join(", ", x.Value!.Errors.Select(e => e.ErrorMessage))}")
+            .ToList();
+        TempData["Debug"] = string.Join(" | ", errors);
+
         ViewBag.Lands = await _context.Lands.Where(l => l.IsActive).ToListAsync();
         ViewBag.Styles = await _context.JourneyStyles.Where(s => s.IsActive).ToListAsync();
         return View(journey);
