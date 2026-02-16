@@ -134,6 +134,22 @@ namespace DesertPaths
 
             var app = builder.Build();
 
+            // Create/Migrate database automatically
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+                // For PostgreSQL in production, ensure database is created
+                if (app.Environment.IsProduction())
+                {
+                    await dbContext.Database.EnsureCreatedAsync();
+                }
+                else
+                {
+                    await dbContext.Database.MigrateAsync();
+                }
+            }
+
             // Seed data
             await DataSeeder.SeedAllAsync(app.Services, builder.Configuration);
 
