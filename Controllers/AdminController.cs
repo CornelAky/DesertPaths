@@ -57,17 +57,41 @@ public class AdminController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateLand(Land land)
     {
+        // Generate slug if empty
+        if (string.IsNullOrEmpty(land.Slug))
+        {
+            land.Slug = GenerateSlug(land.Name);
+        }
+
+        // Remove all navigation property errors that cause validation issues
+        ModelState.Remove("Journeys");
+
+        // Log all errors for debugging
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState
+                .Where(x => x.Value?.Errors.Count > 0)
+                .Select(x => $"{x.Key}: {string.Join(", ", x.Value!.Errors.Select(e => e.ErrorMessage))}")
+                .ToList();
+
+            // Add to TempData for display
+            TempData["Debug"] = string.Join(" | ", errors);
+        }
+
         if (ModelState.IsValid)
         {
-            land.CreatedAt = DateTime.UtcNow;
-            if (string.IsNullOrEmpty(land.Slug))
+            try
             {
-                land.Slug = GenerateSlug(land.Name);
+                land.CreatedAt = DateTime.UtcNow;
+                _context.Lands.Add(land);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Land created successfully!";
+                return RedirectToAction(nameof(Lands));
             }
-            _context.Lands.Add(land);
-            await _context.SaveChangesAsync();
-            TempData["Success"] = "Land created successfully!";
-            return RedirectToAction(nameof(Lands));
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Database error: {ex.Message}";
+            }
         }
         return View(land);
     }
@@ -144,17 +168,44 @@ public class AdminController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateJourney(Journey journey)
     {
+        // Generate slug if empty (before validation)
+        if (string.IsNullOrEmpty(journey.Slug))
+        {
+            journey.Slug = GenerateSlug(journey.Title);
+        }
+
+        // Remove ALL navigation property errors
+        ModelState.Remove("Land");
+        ModelState.Remove("DefaultStyle");
+        ModelState.Remove("Itineraries");
+        ModelState.Remove("Images");
+        ModelState.Remove("Bookings");
+        ModelState.Remove("Reviews");
+
+        // Log errors for debugging
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState
+                .Where(x => x.Value?.Errors.Count > 0)
+                .Select(x => $"{x.Key}: {string.Join(", ", x.Value!.Errors.Select(e => e.ErrorMessage))}")
+                .ToList();
+            TempData["Debug"] = string.Join(" | ", errors);
+        }
+
         if (ModelState.IsValid)
         {
-            journey.CreatedAt = DateTime.UtcNow;
-            if (string.IsNullOrEmpty(journey.Slug))
+            try
             {
-                journey.Slug = GenerateSlug(journey.Title);
+                journey.CreatedAt = DateTime.UtcNow;
+                _context.Journeys.Add(journey);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Journey created successfully!";
+                return RedirectToAction(nameof(Journeys));
             }
-            _context.Journeys.Add(journey);
-            await _context.SaveChangesAsync();
-            TempData["Success"] = "Journey created successfully!";
-            return RedirectToAction(nameof(Journeys));
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Database error: {ex.Message}";
+            }
         }
         ViewBag.Lands = await _context.Lands.Where(l => l.IsActive).ToListAsync();
         ViewBag.Styles = await _context.JourneyStyles.Where(s => s.IsActive).ToListAsync();

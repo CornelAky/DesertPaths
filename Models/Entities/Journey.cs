@@ -11,7 +11,7 @@ public class Journey
     [Required, MaxLength(200)]
     public string Title { get; set; } = string.Empty;
 
-    [Required, MaxLength(200)]
+    [MaxLength(200)]
     public string Slug { get; set; } = string.Empty;
 
     public int LandId { get; set; }
