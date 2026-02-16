@@ -1,0 +1,68 @@
+@page
+@model EmailModel
+@{
+    ViewData["Title"] = "Manage Email";
+    ViewData["ActivePage"] = "Email";
+}
+
+<div class="card" style="padding: 2rem;">
+    <h2 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem;">Manage Email</h2>
+    
+    <partial name="_StatusMessage" for="StatusMessage" />
+    
+    <form id="email-form" method="post" style="max-width: 400px;">
+        <div asp-validation-summary="All" style="color: #dc2626; margin-bottom: 1rem;"></div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label asp-for="Email" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Current Email</label>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input asp-for="Email" disabled
+                       style="flex: 1; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem; background-color: #f9fafb;" />
+                @if (Model.IsEmailConfirmed)
+                {
+                    <span style="color: #059669; display: flex; align-items: center; gap: 0.25rem;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Verified
+                    </span>
+                }
+                else
+                {
+                    <span style="color: #d97706;">Unverified</span>
+                }
+            </div>
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label asp-for="Input.NewEmail" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">New Email</label>
+            <input asp-for="Input.NewEmail" type="email"
+                   style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem;" 
+                   placeholder="Enter new email address" />
+            <span asp-validation-for="Input.NewEmail" style="color: #dc2626; font-size: 0.875rem;"></span>
+        </div>
+        
+        <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="btn-primary" style="padding: 0.75rem 2rem;">
+            Change Email
+        </button>
+    </form>
+</div>
+
+@if (!Model.IsEmailConfirmed)
+{
+    <div class="card" style="padding: 2rem; margin-top: 1.5rem; background-color: #fef3c7; border: 1px solid #fcd34d;">
+        <h3 style="font-weight: 600; margin-bottom: 0.5rem; color: #92400e;">Email Not Verified</h3>
+        <p style="font-size: 0.875rem; color: #78350f; margin-bottom: 1rem;">
+            Your email address has not been verified. Please check your inbox for a verification link.
+        </p>
+        <form method="post" asp-page-handler="SendVerificationEmail" style="display: inline;">
+            <button type="submit" style="padding: 0.5rem 1rem; background-color: #92400e; color: white; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 500;">
+                Resend Verification Email
+            </button>
+        </form>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

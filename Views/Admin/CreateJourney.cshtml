@@ -1,0 +1,130 @@
+@model DesertPaths.Models.Entities.Journey
+@{
+    ViewData["Title"] = Model.Id == 0 ? "Add Journey" : "Edit Journey";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var lands = ViewBag.Lands as List<DesertPaths.Models.Entities.Land>;
+    var styles = ViewBag.Styles as List<DesertPaths.Models.Entities.JourneyStyle>;
+}
+
+<div class="card" style="max-width: 900px;">
+    <div class="card-header">@ViewData["Title"]</div>
+    <div class="card-body">
+        <form asp-action="@(Model.Id == 0 ? "CreateJourney" : "EditJourney")" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="CreatedAt" />
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label asp-for="Title" class="form-label">Title *</label>
+                    <input asp-for="Title" class="form-control" required />
+                </div>
+                
+                <div class="form-group">
+                    <label asp-for="Slug" class="form-label">Slug (auto-generated if empty)</label>
+                    <input asp-for="Slug" class="form-control" />
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label asp-for="LandId" class="form-label">Destination *</label>
+                    <select asp-for="LandId" class="form-control" required>
+                        <option value="">Select destination...</option>
+                        @if (lands != null)
+                        {
+                            @foreach (var land in lands)
+                            {
+                                <option value="@land.Id">@land.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label asp-for="DefaultStyleId" class="form-label">Default Style *</label>
+                    <select asp-for="DefaultStyleId" class="form-control" required>
+                        @if (styles != null)
+                        {
+                            @foreach (var style in styles)
+                            {
+                                <option value="@style.Id">@style.Name (@style.PriceMultiplier.ToString("0.0")x)</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="ShortDescription" class="form-label">Short Description</label>
+                <textarea asp-for="ShortDescription" class="form-control" rows="2" maxlength="500"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="FullDescription" class="form-label">Full Description (HTML)</label>
+                <textarea asp-for="FullDescription" class="form-control" rows="5"></textarea>
+            </div>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label asp-for="DurationDays" class="form-label">Duration (Days) *</label>
+                    <input asp-for="DurationDays" class="form-control" type="number" min="1" required />
+                </div>
+                
+                <div class="form-group">
+                    <label asp-for="DurationNights" class="form-label">Duration (Nights) *</label>
+                    <input asp-for="DurationNights" class="form-control" type="number" min="0" required />
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label asp-for="PriceFrom" class="form-label">Price From (USD) *</label>
+                    <input asp-for="PriceFrom" class="form-control" type="number" min="0" step="0.01" required />
+                </div>
+                
+                <div class="form-group">
+                    <label asp-for="MaxGroupSize" class="form-label">Max Group Size</label>
+                    <input asp-for="MaxGroupSize" class="form-control" type="number" min="1" />
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label asp-for="Difficulty" class="form-label">Difficulty Level</label>
+                    <select asp-for="Difficulty" class="form-control" asp-items="Html.GetEnumSelectList<DesertPaths.Models.Enums.DifficultyLevel>()"></select>
+                </div>
+                
+                <div class="form-group">
+                    <label asp-for="HeroImageUrl" class="form-label">Hero Image URL</label>
+                    <input asp-for="HeroImageUrl" class="form-control" type="url" />
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label class="form-label">Options</label>
+                    <div class="form-check" style="margin-top: 0.5rem;">
+                        <input asp-for="IsFeatured" type="checkbox" />
+                        <label asp-for="IsFeatured">Featured Journey</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <div class="form-check" style="margin-top: 0.5rem;">
+                        <input asp-for="IsActive" type="checkbox" />
+                        <label asp-for="IsActive">Active (visible on site)</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-primary">
+                    @(Model.Id == 0 ? "Create Journey" : "Save Changes")
+                </button>
+                <a href="@Url.Action("Journeys", "Admin")" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

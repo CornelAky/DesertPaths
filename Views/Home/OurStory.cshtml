@@ -1,0 +1,114 @@
+@{
+    ViewData["Title"] = "Our Story";
+}
+
+<!-- Hero Section -->
+<section class="hero" style="min-height: 50vh;">
+    <div class="hero-content">
+        <h1 class="hero-title">Our Story</h1>
+        <p class="hero-subtitle">
+            Crafting unforgettable desert adventures since 2010
+        </p>
+    </div>
+</section>
+
+<!-- Story Section -->
+<section class="section">
+    <div class="container" style="max-width: 900px;">
+        <div style="display: grid; gap: 3rem;">
+            <div>
+                <h2 class="section-title" style="font-size: 2rem; margin-bottom: 1.5rem;">How It All Began</h2>
+                <p style="color: #4b5563; line-height: 1.8; margin-bottom: 1rem;">
+                    Desert Paths was born from a deep love of the desert and a desire to share its magic with travelers 
+                    from around the world. Our founder, after spending years exploring the vast dunes and hidden oases 
+                    of Arabia, realized that the true beauty of the desert could only be experienced through authentic, 
+                    immersive journeys.
+                </p>
+                <p style="color: #4b5563; line-height: 1.8;">
+                    What started as small expeditions with friends has grown into a premier desert travel company, 
+                    but our philosophy remains the same: to create meaningful connections between travelers and 
+                    the ancient lands they explore.
+                </p>
+            </div>
+            
+            <div class="card" style="padding: 2rem; background: linear-gradient(135deg, var(--desert-50) 0%, var(--sand-50) 100%);">
+                <h3 style="font-weight: 600; margin-bottom: 1rem; color: var(--desert-800);">Our Mission</h3>
+                <p style="color: var(--desert-700); font-size: 1.25rem; font-style: italic;">
+                    "To inspire wonder and connection through transformative desert experiences, 
+                    while preserving the cultural heritage and natural beauty of the lands we explore."
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="section-title" style="font-size: 2rem; margin-bottom: 1.5rem;">What Sets Us Apart</h2>
+                <div class="grid grid-2" style="gap: 1.5rem;">
+                    <div class="card" style="padding: 1.5rem;">
+                        <h4 style="font-weight: 600; margin-bottom: 0.5rem; color: var(--desert-700);">??? Authentic Experiences</h4>
+                        <p style="color: #6b7280; font-size: 0.9375rem;">
+                            We don't just show you the desert—we help you live it. From traditional Bedouin camps 
+                            to local cuisine, every detail is curated for authenticity.
+                        </p>
+                    </div>
+                    <div class="card" style="padding: 1.5rem;">
+                        <h4 style="font-weight: 600; margin-bottom: 0.5rem; color: var(--desert-700);">?? Expert Local Guides</h4>
+                        <p style="color: #6b7280; font-size: 0.9375rem;">
+                            Our guides are desert natives who share not just routes and facts, but stories, 
+                            traditions, and the deep wisdom of their ancestors.
+                        </p>
+                    </div>
+                    <div class="card" style="padding: 1.5rem;">
+                        <h4 style="font-weight: 600; margin-bottom: 0.5rem; color: var(--desert-700);">?? Sustainable Travel</h4>
+                        <p style="color: #6b7280; font-size: 0.9375rem;">
+                            We're committed to leaving no trace and supporting local communities. 
+                            Every journey contributes to conservation efforts.
+                        </p>
+                    </div>
+                    <div class="card" style="padding: 1.5rem;">
+                        <h4 style="font-weight: 600; margin-bottom: 0.5rem; color: var(--desert-700);">? Small Groups</h4>
+                        <p style="color: #6b7280; font-size: 0.9375rem;">
+                            We keep our groups small to ensure personalized attention and minimize 
+                            our impact on the delicate desert ecosystem.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="section section-dark">
+    <div class="container">
+        <div class="grid grid-4" style="text-align: center;">
+            <div>
+                <div style="font-size: 3rem; font-weight: 700; color: var(--sand-400);">15+</div>
+                <div style="color: #9ca3af;">Years of Experience</div>
+            </div>
+            <div>
+                <div style="font-size: 3rem; font-weight: 700; color: var(--sand-400);">5000+</div>
+                <div style="color: #9ca3af;">Happy Travelers</div>
+            </div>
+            <div>
+                <div style="font-size: 3rem; font-weight: 700; color: var(--sand-400);">25+</div>
+                <div style="color: #9ca3af;">Unique Journeys</div>
+            </div>
+            <div>
+                <div style="font-size: 3rem; font-weight: 700; color: var(--sand-400);">4.9</div>
+                <div style="color: #9ca3af;">Average Rating</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section" style="text-align: center;">
+    <div class="container">
+        <h2 class="section-title">Ready to Start Your Adventure?</h2>
+        <p class="section-subtitle" style="margin: 1rem auto 2rem;">
+            Join us on a journey that will change how you see the world.
+        </p>
+        <a asp-controller="Journeys" asp-action="Index" class="btn-primary">
+            Explore Our Journeys
+        </a>
+    </div>
+</section>

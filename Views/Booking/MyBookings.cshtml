@@ -1,0 +1,166 @@
+@model DesertPaths.ViewModels.MyBookingsViewModel
+@{
+    ViewData["Title"] = "My Bookings";
+}
+
+<section class="hero" style="min-height: 30vh;">
+    <div class="hero-content">
+        <h1 class="hero-title" style="font-size: 2.5rem;">My Bookings</h1>
+        <p class="hero-subtitle">View and manage your desert adventures</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        @if (TempData["Success"] != null)
+        {
+            <div style="background-color: #d1fae5; border: 1px solid #10b981; color: #065f46; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+                @TempData["Success"]
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div style="background-color: #fee2e2; border: 1px solid #ef4444; color: #991b1b; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+                @TempData["Error"]
+            </div>
+        }
+        
+        @if (Model.Bookings.Any())
+        {
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                @foreach (var booking in Model.Bookings)
+                {
+                    <div class="card" style="display: grid; grid-template-columns: 1fr; overflow: hidden;">
+                        <style>
+                            @@media (min-width: 768px) {
+                                .booking-card-grid {
+                                    grid-template-columns: 200px 1fr !important;
+                                }
+                            }
+                        </style>
+                        <div class="booking-card-grid" style="display: grid; grid-template-columns: 1fr;">
+                            @if (!string.IsNullOrEmpty(booking.JourneyImageUrl))
+                            {
+                                <img src="@booking.JourneyImageUrl" alt="@booking.JourneyTitle" style="width: 100%; height: 200px; object-fit: cover;">
+                            }
+                            else
+                            {
+                                <div style="width: 100%; height: 200px; background: linear-gradient(135deg, var(--desert-600) 0%, var(--sand-600) 100%);"></div>
+                            }
+
+                            <div style="padding: 1.5rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                                    <div>
+                                        <p style="font-size: 0.75rem; color: #6b7280;">@booking.LandName • @booking.BookingReference</p>
+                                        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 600;">@booking.JourneyTitle</h3>
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: 0.25rem; align-items: flex-end;">
+                                        <span style="display: inline-block; padding: 0.25rem 0.75rem; font-size: 0.75rem; font-weight: 600; border-radius: 9999px;
+                                            @(booking.Status == "Confirmed" ? "background-color: #d1fae5; color: #065f46;" :
+                                              booking.Status == "Pending" ? "background-color: #fef3c7; color: #92400e;" :
+                                              booking.Status == "Completed" ? "background-color: #dbeafe; color: #1e40af;" :
+                                              "background-color: #fee2e2; color: #991b1b;")">
+                                            @booking.Status
+                                        </span>
+                                        @if (booking.IsPaid)
+                                        {
+                                            <span style="display: inline-block; padding: 0.125rem 0.5rem; font-size: 0.625rem; font-weight: 600; border-radius: 9999px; background-color: #d1fae5; color: #065f46;">
+                                                ✓ Paid
+                                            </span>
+                                        }
+                                        else if (booking.PaymentMethod == "OnArrival")
+                                        {
+                                            <span style="display: inline-block; padding: 0.125rem 0.5rem; font-size: 0.625rem; font-weight: 600; border-radius: 9999px; background-color: #e0e7ff; color: #3730a3;">
+                                                Pay on Arrival
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span style="display: inline-block; padding: 0.125rem 0.5rem; font-size: 0.625rem; font-weight: 600; border-radius: 9999px; background-color: #fef3c7; color: #92400e;">
+                                                Awaiting Payment
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                                    <div>
+                                        <p style="font-size: 0.75rem; color: #6b7280;">Travel Date</p>
+                                        <p style="font-weight: 500;">@booking.TravelDate.ToString("MMM dd, yyyy")</p>
+                                    </div>
+                                    <div>
+                                        <p style="font-size: 0.75rem; color: #6b7280;">Guests</p>
+                                        <p style="font-weight: 500;">@booking.NumberOfGuests @(booking.NumberOfGuests == 1 ? "person" : "people")</p>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid #e5e7eb; flex-wrap: wrap; gap: 1rem;">
+                                    <div class="price">
+                                        $@booking.TotalPrice.ToString("N0")
+                                    </div>
+
+                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                        <a asp-action="Confirmation" asp-route-id="@booking.Id" class="btn-outline" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                                            View Details
+                                        </a>
+
+                                        @if (booking.CanPay)
+                                        {
+                                            <a asp-controller="Payment" asp-action="Checkout" asp-route-bookingId="@booking.Id" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                                                Pay Now
+                                            </a>
+                                        }
+
+                                        @if (booking.CanCancel)
+                                        {
+                                            <form asp-action="Cancel" asp-route-id="@booking.Id" method="post" style="display: inline;" 
+                                                  onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" style="padding: 0.5rem 1rem; font-size: 0.875rem; background-color: #fee2e2; color: #991b1b; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 500;">
+                                                    Cancel
+                                                </button>
+                                            </form>
+                                        }
+
+                                        @if (booking.CanReview)
+                                        {
+                                            <a asp-action="Review" asp-route-id="@booking.Id" style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.5rem 1rem; font-size: 0.875rem; background-color: #fef3c7; color: #92400e; border-radius: 0.5rem; text-decoration: none; font-weight: 500;">
+                                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                                </svg>
+                                                Write Review
+                                            </a>
+                                        }
+
+                                        @if (booking.HasReviewed)
+                                        {
+                                            <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.5rem 1rem; font-size: 0.875rem; background-color: #d1fae5; color: #065f46; border-radius: 0.5rem;">
+                                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                </svg>
+                                                Reviewed
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="card" style="padding: 4rem; text-align: center;">
+                <div style="width: 4rem; height: 4rem; background-color: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                    <svg width="32" height="32" fill="none" stroke="#9ca3af" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem;">No Bookings Yet</h3>
+                <p style="color: #6b7280; margin-bottom: 2rem;">Start planning your desert adventure today!</p>
+                <a asp-controller="Journeys" asp-action="Index" class="btn-primary">Explore Journeys</a>
+            </div>
+        }
+    </div>
+</section>

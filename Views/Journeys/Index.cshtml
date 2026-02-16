@@ -1,0 +1,105 @@
+@model IEnumerable<DesertPaths.Models.Entities.Journey>
+@{
+    ViewData["Title"] = "Journeys";
+    var lands = ViewBag.Lands as List<DesertPaths.Models.Entities.Land>;
+    var selectedLand = ViewBag.SelectedLand as string;
+}
+
+<!-- Hero Section -->
+<section class="hero" style="min-height: 50vh;">
+    <div class="hero-content">
+        <h1 class="hero-title">Our Journeys</h1>
+        <p class="hero-subtitle">
+            Handcrafted adventures designed to immerse you in the magic of the desert.
+        </p>
+    </div>
+</section>
+
+<!-- Filter & Journeys -->
+<section class="section">
+    <div class="container">
+        <!-- Filter -->
+        @if (lands != null && lands.Any())
+        {
+            <div style="margin-bottom: 2rem; display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
+                <a asp-action="Index" 
+                   class="@(string.IsNullOrEmpty(selectedLand) ? "btn-primary" : "btn-outline")" 
+                   style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                    All Destinations
+                </a>
+                @foreach (var land in lands)
+                {
+                    <a asp-action="Index" asp-route-land="@land.Slug"
+                       class="@(selectedLand == land.Slug ? "btn-primary" : "btn-outline")" 
+                       style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                        @land.Name
+                    </a>
+                }
+            </div>
+        }
+        
+        @if (Model.Any())
+        {
+            <div class="grid grid-3">
+                @foreach (var journey in Model)
+                {
+                    <div class="card">
+                        @if (!string.IsNullOrEmpty(journey.HeroImageUrl))
+                        {
+                            <img src="@journey.HeroImageUrl" alt="@journey.Title" class="card-image">
+                        }
+                        else
+                        {
+                            <img src="https://images.unsplash.com/photo-1547234935-80c7145ec969?w=600&h=400&fit=crop" alt="@journey.Title" class="card-image">
+                        }
+                        <div class="card-body">
+                            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap;">
+                                @if (journey.IsFeatured)
+                                {
+                                    <span class="badge badge-primary">Featured</span>
+                                }
+                                <span class="badge badge-secondary">@journey.Land.Name</span>
+                                @if (journey.Reviews.Any(r => r.IsApproved))
+                                {
+                                    var avgRating = journey.Reviews.Where(r => r.IsApproved).Average(r => r.Rating);
+                                    var reviewCount = journey.Reviews.Count(r => r.IsApproved);
+                                    <span style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #f59e0b;">
+                                        ★ @avgRating.ToString("F1") <span style="color: #6b7280;">(@reviewCount)</span>
+                                    </span>
+                                }
+                            </div>
+
+                            <h3 class="card-title">@journey.Title</h3>
+                            <p class="card-text">@journey.ShortDescription</p>
+
+                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem; font-size: 0.875rem; color: #6b7280;">
+                                <span>📅 @journey.DurationDays days / @journey.DurationNights nights</span>
+                            </div>
+                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem; font-size: 0.875rem; color: #6b7280;">
+                                <span>👥 Max @journey.MaxGroupSize people</span>
+                                <span>⛰️ @journey.Difficulty</span>
+                            </div>
+
+                            <div class="card-footer">
+                                <div class="price">
+                                    <span class="price-from">From</span>
+                                    $@journey.PriceFrom.ToString("N0")
+                                </div>
+                                <a asp-action="Details" asp-route-slug="@journey.Slug" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center" style="padding: 4rem 0;">
+                <h3 style="color: #6b7280; margin-bottom: 1rem;">No journeys available</h3>
+                <p style="color: #9ca3af;">Check back soon for exciting new adventures!</p>
+            </div>
+        }
+    </div>
+</section>

@@ -1,0 +1,126 @@
+@model IEnumerable<DesertPaths.Models.Entities.Booking>
+@{
+    ViewData["Title"] = "Bookings";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var selectedStatus = ViewBag.SelectedStatus as string;
+}
+
+<div class="flex justify-between items-center mb-4">
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <a href="@Url.Action("Bookings", "Admin")" class="btn @(string.IsNullOrEmpty(selectedStatus) ? "btn-primary" : "btn-secondary") btn-sm">All</a>
+        <a href="@Url.Action("Bookings", "Admin", new { status = "Pending" })" class="btn @(selectedStatus == "Pending" ? "btn-primary" : "btn-secondary") btn-sm">Pending</a>
+        <a href="@Url.Action("Bookings", "Admin", new { status = "Confirmed" })" class="btn @(selectedStatus == "Confirmed" ? "btn-primary" : "btn-secondary") btn-sm">Confirmed</a>
+        <a href="@Url.Action("Bookings", "Admin", new { status = "Completed" })" class="btn @(selectedStatus == "Completed" ? "btn-primary" : "btn-secondary") btn-sm">Completed</a>
+        <a href="@Url.Action("Bookings", "Admin", new { status = "Cancelled" })" class="btn @(selectedStatus == "Cancelled" ? "btn-primary" : "btn-secondary") btn-sm">Cancelled</a>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div style="background-color: #d1fae5; border: 1px solid #10b981; color: #065f46; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+        @TempData["Success"]
+    </div>
+}
+
+<div class="card">
+    <div class="card-body" style="padding: 0; overflow-x: auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Reference</th>
+                    <th>Customer</th>
+                    <th>Contact</th>
+                    <th>Journey</th>
+                    <th>Travel Date</th>
+                    <th>Guests</th>
+                    <th>Total</th>
+                    <th>Payment</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var booking in Model)
+                {
+                    <tr>
+                        <td>
+                            <strong>@booking.BookingReference</strong>
+                            <br><small style="color: #6b7280;">@booking.CreatedAt.ToString("MMM dd")</small>
+                        </td>
+                        <td>
+                            @booking.User.FullName
+                            <br><small style="color: #6b7280;">@booking.User.Email</small>
+                        </td>
+                        <td>
+                            <small>
+                                @(booking.ContactPhone ?? "N/A")
+                                <br>@(booking.ContactEmail ?? booking.User.Email)
+                            </small>
+                        </td>
+                        <td>@booking.Journey.Title</td>
+                        <td>@booking.TravelDate.ToString("MMM dd, yyyy")</td>
+                        <td>@booking.NumberOfGuests</td>
+                        <td><strong>$@booking.TotalPrice.ToString("N0")</strong></td>
+                        <td>
+                            @if (booking.IsPaid)
+                            {
+                                <span class="badge badge-success">✓ Paid</span>
+                            }
+                            else if (booking.PaymentMethod == DesertPaths.Models.Enums.PaymentMethod.OnArrival)
+                            {
+                                <span class="badge badge-info">On Arrival</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-warning">Unpaid</span>
+                            }
+                        </td>
+                        <td>
+                            <span class="badge @(booking.Status == DesertPaths.Models.Enums.BookingStatus.Confirmed ? "badge-success" : booking.Status == DesertPaths.Models.Enums.BookingStatus.Pending ? "badge-warning" : booking.Status == DesertPaths.Models.Enums.BookingStatus.Completed ? "badge-info" : "badge-danger")">
+                                @booking.Status
+                            </span>
+                        </td>
+                        <td>
+                            <div class="flex gap-2" style="flex-wrap: wrap;">
+                                @if (booking.Status == DesertPaths.Models.Enums.BookingStatus.Pending)
+                                {
+                                    <form asp-action="ConfirmBooking" asp-route-id="@booking.Id" method="post" style="display: inline;">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-success btn-sm">Confirm</button>
+                                    </form>
+                                    <form asp-action="CancelBooking" asp-route-id="@booking.Id" method="post" style="display: inline;">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                                    </form>
+                                }
+                                else if (booking.Status == DesertPaths.Models.Enums.BookingStatus.Confirmed)
+                                {
+                                    @if (!booking.IsPaid)
+                                    {
+                                        <form asp-action="MarkAsPaid" asp-route-id="@booking.Id" method="post" style="display: inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-success btn-sm">Mark Paid</button>
+                                        </form>
+                                    }
+                                    <form asp-action="CompleteBooking" asp-route-id="@booking.Id" method="post" style="display: inline;">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-info btn-sm">Complete</button>
+                                    </form>
+                                    <form asp-action="CancelBooking" asp-route-id="@booking.Id" method="post" style="display: inline;">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                                    </form>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (!Model.Any())
+        {
+            <p style="padding: 2rem; text-align: center; color: #6b7280;">No bookings found.</p>
+        }
+    </div>
+</div>

@@ -1,0 +1,72 @@
+@model IEnumerable<DesertPaths.Models.Entities.Review>
+@{
+    ViewData["Title"] = "Reviews";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-body" style="padding: 0;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Journey</th>
+                    <th>User</th>
+                    <th>Rating</th>
+                    <th>Comment</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var review in Model)
+                {
+                    <tr>
+                        <td>@review.Journey.Title</td>
+                        <td>@review.User.FullName</td>
+                        <td>
+                            <span style="color: #eab308;">
+                                @for (int i = 0; i < review.Rating; i++)
+                                {
+                                    <text>★</text>
+                                }
+                            </span>
+                        </td>
+                        <td style="max-width: 300px;">
+                            @if (!string.IsNullOrEmpty(review.Comment))
+                            {
+                                @(review.Comment.Length > 100 ? review.Comment.Substring(0, 100) + "..." : review.Comment)
+                            }
+                        </td>
+                        <td>
+                            <span class="badge @(review.IsApproved ? "badge-success" : "badge-warning")">
+                                @(review.IsApproved ? "Approved" : "Pending")
+                            </span>
+                        </td>
+                        <td>@review.CreatedAt.ToString("MMM dd, yyyy")</td>
+                        <td>
+                            <div class="flex gap-2">
+                                @if (!review.IsApproved)
+                                {
+                                    <form asp-action="ApproveReview" asp-route-id="@review.Id" method="post" style="display: inline;">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                                    </form>
+                                }
+                                <form asp-action="DeleteReview" asp-route-id="@review.Id" method="post" style="display: inline;" onsubmit="return confirm('Delete this review?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        
+        @if (!Model.Any())
+        {
+            <p style="padding: 2rem; text-align: center; color: #6b7280;">No reviews yet.</p>
+        }
+    </div>
+</div>

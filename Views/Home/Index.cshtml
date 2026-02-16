@@ -1,0 +1,208 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">Discover the Magic of the Desert</h1>
+        <p class="hero-subtitle">
+            Embark on extraordinary journeys through ancient lands. 
+            Experience authentic cultures, breathtaking landscapes, and create memories that last a lifetime.
+        </p>
+        <div class="flex items-center justify-center gap-4" style="flex-wrap: wrap;">
+            <a asp-controller="Journeys" asp-action="Index" class="btn-primary">Explore Journeys</a>
+            <a asp-controller="Home" asp-action="OurStory" class="btn-outline" style="border-color: white; color: white;">Our Story</a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Destinations Section -->
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Explore Our Destinations</h2>
+            <p class="section-subtitle">
+                From vast golden dunes to ancient oases, discover lands that have captivated travelers for centuries.
+            </p>
+        </div>
+
+        <div class="grid grid-3">
+            <!-- Destination Card 1 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=600&h=400&fit=crop" alt="Saudi Arabia Desert" class="card-image">
+                <div class="card-body">
+                    <span class="badge badge-primary">Popular</span>
+                    <h3 class="card-title" style="margin-top: 0.5rem;">Saudi Arabia</h3>
+                    <p class="card-text">Discover the vast Empty Quarter and ancient Nabatean ruins of AlUla.</p>
+                    <a asp-controller="Lands" asp-action="Details" asp-route-slug="saudi-arabia" class="btn-outline" style="width: 100%; text-align: center;">Explore</a>
+                </div>
+            </div>
+
+            <!-- Destination Card 2 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1547234935-80c7145ec969?w=600&h=400&fit=crop" alt="Jordan Desert" class="card-image">
+                <div class="card-body">
+                    <span class="badge badge-secondary">Featured</span>
+                    <h3 class="card-title" style="margin-top: 0.5rem;">Jordan</h3>
+                    <p class="card-text">Walk through the rose-red city of Petra and camp under Wadi Rum stars.</p>
+                    <a asp-controller="Lands" asp-action="Details" asp-route-slug="jordan" class="btn-outline" style="width: 100%; text-align: center;">Explore</a>
+                </div>
+            </div>
+
+            <!-- Destination Card 3 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1548018560-c7196c4cbc30?w=600&h=400&fit=crop" alt="Morocco Desert" class="card-image">
+                <div class="card-body">
+                    <h3 class="card-title">Morocco</h3>
+                    <p class="card-text">Experience the magic of Saharan dunes and vibrant Berber culture.</p>
+                    <a asp-controller="Lands" asp-action="Details" asp-route-slug="morocco" class="btn-outline" style="width: 100%; text-align: center;">Explore</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4" style="margin-top: 2rem;">
+            <a asp-controller="Lands" asp-action="Index" class="btn-secondary">View All Destinations</a>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us Section -->
+<section class="section section-light">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Why Travel With Us</h2>
+            <p class="section-subtitle">
+                We craft authentic desert experiences with care, expertise, and passion.
+            </p>
+        </div>
+
+        <div class="grid grid-4">
+            <div class="text-center">
+                <div class="feature-icon" style="margin: 0 auto 1rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                    </svg>
+                </div>
+                <h3 style="font-weight: 600; margin-bottom: 0.5rem;">Expert Local Guides</h3>
+                <p style="color: #6b7280; font-size: 0.875rem;">Knowledgeable guides who know every hidden gem and local secret.</p>
+            </div>
+
+            <div class="text-center">
+                <div class="feature-icon" style="margin: 0 auto 1rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M2.5 13.5A.5.5 0 0 1 3 13h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zM13.991 3.5h-1.495a.5.5 0 0 0-.395.196l-2.06 2.71-2.06-2.71a.5.5 0 0 0-.395-.196H5.991a.5.5 0 0 0-.436.253L2.5 9V3.5A.5.5 0 0 1 3 3h10a.5.5 0 0 1 .5.5v5.5l-3.055-5.253a.5.5 0 0 0-.436-.253z"/>
+                    </svg>
+                </div>
+                <h3 style="font-weight: 600; margin-bottom: 0.5rem;">Small Groups</h3>
+                <p style="color: #6b7280; font-size: 0.875rem;">Intimate group sizes for a more personal and immersive experience.</p>
+            </div>
+
+            <div class="text-center">
+                <div class="feature-icon" style="margin: 0 auto 1rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                    </svg>
+                </div>
+                <h3 style="font-weight: 600; margin-bottom: 0.5rem;">Flexible Options</h3>
+                <p style="color: #6b7280; font-size: 0.875rem;">Choose from comfort to luxury styles to match your preferences.</p>
+            </div>
+
+            <div class="text-center">
+                <div class="feature-icon" style="margin: 0 auto 1rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                    </svg>
+                </div>
+                <h3 style="font-weight: 600; margin-bottom: 0.5rem;">Easy Booking</h3>
+                <p style="color: #6b7280; font-size: 0.875rem;">Simple online booking with secure payment and instant confirmation.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Reviews Section -->
+@{
+    var reviews = ViewBag.Reviews as List<DesertPaths.Models.Entities.Review>;
+}
+@if (reviews != null && reviews.Any())
+{
+    <section class="section" style="background-color: #faf7f2;">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <p style="color: var(--desert-600); font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.875rem; margin-bottom: 0.5rem;">Testimonials</p>
+                <h2 class="font-display" style="font-size: 2.5rem; color: #111827; margin-bottom: 1rem;">
+                    What Our Travelers Say
+                </h2>
+                <p style="color: #6b7280; max-width: 600px; margin: 0 auto;">
+                    Hear from adventurers who have experienced the magic of the desert with us
+                </p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto;">
+                @foreach (var review in reviews)
+                {
+                    <div class="card" style="padding: 1.5rem; display: flex; flex-direction: column;">
+                        <!-- Stars -->
+                        <div style="display: flex; color: #f59e0b; margin-bottom: 1rem;">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <span style="font-size: 1.25rem;">@(i <= review.Rating ? "★" : "☆")</span>
+                            }
+                        </div>
+
+                        <!-- Comment -->
+                        @if (!string.IsNullOrEmpty(review.Comment))
+                        {
+                            <p style="color: #374151; line-height: 1.6; flex-grow: 1; font-style: italic;">
+                                "@(review.Comment.Length > 150 ? review.Comment.Substring(0, 150) + "..." : review.Comment)"
+                            </p>
+                        }
+                        else
+                        {
+                            <p style="color: #9ca3af; flex-grow: 1; font-style: italic;">
+                                "Amazing experience!"
+                            </p>
+                        }
+
+                        <!-- Author & Journey -->
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e5e7eb;">
+                            <div style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--desert-400), var(--desert-600)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                                @(review.User.FirstName?[0].ToString().ToUpper() ?? "T")
+                            </div>
+                            <div style="flex-grow: 1;">
+                                <p style="font-weight: 600; color: #111827;">
+                                    @review.User.FirstName @(review.User.LastName != null ? review.User.LastName[0] + "." : "")
+                                </p>
+                                <p style="font-size: 0.75rem; color: #6b7280;">
+                                    @review.Journey.Title • @review.Journey.Land.Name
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <a asp-controller="Journeys" asp-action="Index" class="btn-outline">
+                    See All Journeys & Reviews
+                </a>
+            </div>
+        </div>
+    </section>
+}
+
+<!-- CTA Section -->
+<section class="section section-dark" style="text-align: center;">
+    <div class="container">
+        <h2 class="font-display" style="font-size: 2.5rem; margin-bottom: 1rem;">Ready for Your Desert Adventure?</h2>
+        <p style="color: #d1d5db; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+            Join thousands of travelers who have discovered the magic of the desert with us. 
+            Your journey of a lifetime awaits.
+        </p>
+        <a asp-controller="Journeys" asp-action="Index" class="btn-primary" style="font-size: 1.125rem; padding: 1rem 2rem;">
+            Start Planning Your Journey
+        </a>
+    </div>
+</section>

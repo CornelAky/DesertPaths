@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin | Desert Paths</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; min-height: 100vh; }
+        
+        .admin-layout { display: flex; min-height: 100vh; }
+        
+        /* Sidebar */
+        .sidebar { width: 250px; background-color: #1f2937; color: white; padding: 1.5rem 0; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-logo { font-size: 1.25rem; font-weight: 700; padding: 0 1.5rem 1.5rem; border-bottom: 1px solid #374151; color: #f97316; }
+        .sidebar-nav { padding: 1rem 0; }
+        .sidebar-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.5rem; color: #9ca3af; text-decoration: none; transition: all 0.2s; }
+        .sidebar-link:hover, .sidebar-link.active { background-color: #374151; color: white; }
+        .sidebar-link svg { width: 20px; height: 20px; }
+        .sidebar-section { padding: 1rem 1.5rem 0.5rem; font-size: 0.75rem; text-transform: uppercase; color: #6b7280; letter-spacing: 0.05em; }
+        
+        /* Main Content */
+        .main-content { flex: 1; margin-left: 250px; }
+        .topbar { background: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .topbar-title { font-size: 1.25rem; font-weight: 600; color: #111827; }
+        .topbar-user { display: flex; align-items: center; gap: 1rem; }
+        .topbar-user a { color: #6b7280; text-decoration: none; font-size: 0.875rem; }
+        .topbar-user a:hover { color: #f97316; }
+        
+        .content { padding: 2rem; }
+        
+        /* Cards */
+        .card { background: white; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .card-header { padding: 1rem 1.5rem; border-bottom: 1px solid #e5e7eb; font-weight: 600; }
+        .card-body { padding: 1.5rem; }
+        
+        /* Stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: white; border-radius: 0.5rem; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .stat-value { font-size: 2rem; font-weight: 700; color: #111827; }
+        .stat-label { font-size: 0.875rem; color: #6b7280; margin-top: 0.25rem; }
+        .stat-icon { width: 3rem; height: 3rem; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+        .stat-icon.orange { background-color: #fff7ed; color: #ea580c; }
+        .stat-icon.blue { background-color: #eff6ff; color: #2563eb; }
+        .stat-icon.green { background-color: #f0fdf4; color: #16a34a; }
+        .stat-icon.purple { background-color: #faf5ff; color: #9333ea; }
+        
+        /* Table */
+        .table { width: 100%; border-collapse: collapse; }
+        .table th, .table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid #e5e7eb; }
+        .table th { font-weight: 600; color: #374151; font-size: 0.875rem; background-color: #f9fafb; }
+        .table td { font-size: 0.875rem; color: #4b5563; }
+        .table tr:hover { background-color: #f9fafb; }
+        
+        /* Badges */
+        .badge { display: inline-block; padding: 0.25rem 0.75rem; font-size: 0.75rem; font-weight: 600; border-radius: 9999px; }
+        .badge-success { background-color: #d1fae5; color: #065f46; }
+        .badge-warning { background-color: #fef3c7; color: #92400e; }
+        .badge-danger { background-color: #fee2e2; color: #991b1b; }
+        .badge-info { background-color: #dbeafe; color: #1e40af; }
+        
+        /* Buttons */
+        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; border-radius: 0.375rem; border: none; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+        .btn-primary { background-color: #ea580c; color: white; }
+        .btn-primary:hover { background-color: #c2410c; }
+        .btn-secondary { background-color: #e5e7eb; color: #374151; }
+        .btn-secondary:hover { background-color: #d1d5db; }
+        .btn-danger { background-color: #fee2e2; color: #991b1b; }
+        .btn-danger:hover { background-color: #fecaca; }
+        .btn-success { background-color: #d1fae5; color: #065f46; }
+        .btn-success:hover { background-color: #a7f3d0; }
+        .btn-sm { padding: 0.25rem 0.5rem; font-size: 0.75rem; }
+        
+        /* Forms */
+        .form-group { margin-bottom: 1rem; }
+        .form-label { display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151; font-size: 0.875rem; }
+        .form-control { width: 100%; padding: 0.625rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; font-size: 0.875rem; }
+        .form-control:focus { outline: none; border-color: #ea580c; box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
+        textarea.form-control { min-height: 100px; resize: vertical; }
+        select.form-control { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1.5rem; padding-right: 2.5rem; }
+        .form-check { display: flex; align-items: center; gap: 0.5rem; }
+        .form-check input { width: 1rem; height: 1rem; }
+        
+        /* Alerts */
+        .alert { padding: 1rem; border-radius: 0.375rem; margin-bottom: 1rem; }
+        .alert-success { background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+        .alert-error { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        
+        /* Grid */
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+        
+        /* Utilities */
+        .text-right { text-align: right; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mt-4 { margin-top: 1rem; }
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 0.5rem; }
+        
+        @@media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @@media (max-width: 768px) {
+            .sidebar { width: 60px; }
+            .sidebar-logo, .sidebar-section, .sidebar-link span { display: none; }
+            .sidebar-link { justify-content: center; padding: 1rem; }
+            .main-content { margin-left: 60px; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">🏜️ Desert Paths</div>
+            
+            <nav class="sidebar-nav">
+                <a href="@Url.Action("Index", "Admin")" class="sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    <span>Dashboard</span>
+                </a>
+                
+                <div class="sidebar-section">Content</div>
+                
+                <a href="@Url.Action("Lands", "Admin")" class="sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString()?.Contains("Land") == true ? "active" : "")">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Destinations</span>
+                </a>
+                
+                <a href="@Url.Action("Journeys", "Admin")" class="sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString()?.Contains("Journey") == true ? "active" : "")">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                    <span>Journeys</span>
+                </a>
+                
+                <div class="sidebar-section">Operations</div>
+                
+                <a href="@Url.Action("Bookings", "Admin")" class="sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString()?.Contains("Booking") == true ? "active" : "")">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span>Bookings</span>
+                </a>
+                
+                <a href="@Url.Action("Reviews", "Admin")" class="sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString()?.Contains("Review") == true ? "active" : "")">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+                    <span>Reviews</span>
+                </a>
+                
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="sidebar-section">Admin</div>
+                    
+                    <a href="@Url.Action("Users", "Admin")" class="sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString()?.Contains("User") == true ? "active" : "")">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <span>Users</span>
+                    </a>
+                }
+                
+                <div class="sidebar-section">Navigation</div>
+                
+                <a href="@Url.Action("Index", "Home")" class="sidebar-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    <span>View Site</span>
+                </a>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="topbar">
+                <h1 class="topbar-title">@ViewData["Title"]</h1>
+                <div class="topbar-user">
+                    <span>@User.Identity?.Name</span>
+                    <a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home")">Logout</a>
+                </div>
+            </header>
+            
+            <main class="content">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success">@TempData["Success"]</div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-error">@TempData["Error"]</div>
+                }
+                
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

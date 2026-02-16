@@ -1,0 +1,70 @@
+@model DesertPaths.Models.Entities.Land
+@{
+    ViewData["Title"] = "Edit Destination";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card" style="max-width: 800px;">
+    <div class="card-header">Edit: @Model.Name</div>
+    <div class="card-body">
+        <form asp-action="EditLand" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="CreatedAt" />
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label asp-for="Name" class="form-label">Name *</label>
+                    <input asp-for="Name" class="form-control" required />
+                </div>
+                
+                <div class="form-group">
+                    <label asp-for="Slug" class="form-label">Slug</label>
+                    <input asp-for="Slug" class="form-control" />
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="ShortDescription" class="form-label">Short Description</label>
+                <textarea asp-for="ShortDescription" class="form-control" rows="2" maxlength="500"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="FullDescription" class="form-label">Full Description (HTML)</label>
+                <textarea asp-for="FullDescription" class="form-control" rows="5"></textarea>
+            </div>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label asp-for="HeroImageUrl" class="form-label">Hero Image URL</label>
+                    <input asp-for="HeroImageUrl" class="form-control" type="url" />
+                </div>
+                
+                <div class="form-group">
+                    <label asp-for="ThumbnailUrl" class="form-label">Thumbnail URL</label>
+                    <input asp-for="ThumbnailUrl" class="form-control" type="url" />
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label asp-for="DisplayOrder" class="form-label">Display Order</label>
+                    <input asp-for="DisplayOrder" class="form-control" type="number" min="0" />
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <div class="form-check" style="margin-top: 0.5rem;">
+                        <input asp-for="IsActive" type="checkbox" />
+                        <label asp-for="IsActive">Active</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="@Url.Action("Lands", "Admin")" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

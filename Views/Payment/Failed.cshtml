@@ -1,0 +1,65 @@
+@model DesertPaths.Models.Entities.Booking
+@{
+    ViewData["Title"] = "Payment Failed";
+    var errorMessage = ViewBag.ErrorMessage as string ?? "Payment was declined";
+}
+
+<section class="section" style="min-height: 80vh; display: flex; align-items: center;">
+    <div class="container" style="max-width: 500px;">
+        <div class="card" style="padding: 2.5rem; text-align: center;">
+            <!-- Error Icon -->
+            <div style="width: 4rem; height: 4rem; background-color: #fee2e2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                <svg width="32" height="32" fill="none" stroke="#dc2626" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </div>
+            
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.75rem; font-weight: 700; color: #111827; margin-bottom: 0.5rem;">Payment Failed</h1>
+            
+            <p style="color: #6b7280; margin-bottom: 1.5rem;">
+                Unfortunately, your payment could not be processed.
+            </p>
+            
+            <!-- Error Message -->
+            <div style="background-color: #fee2e2; border: 1px solid #fecaca; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+                <p style="color: #991b1b; font-size: 0.875rem;">@errorMessage</p>
+            </div>
+            
+            <!-- Booking Info -->
+            <div style="text-align: left; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span style="color: #6b7280; font-size: 0.875rem;">Booking Reference</span>
+                    <span style="font-family: monospace; font-weight: 600;">@Model.BookingReference</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #6b7280; font-size: 0.875rem;">Amount</span>
+                    <span style="font-weight: 600;">$@Model.TotalPrice.ToString("N0")</span>
+                </div>
+            </div>
+            
+            <!-- What to try -->
+            <div style="background-color: #f9fafb; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem; text-align: left;">
+                <p style="font-weight: 600; margin-bottom: 0.5rem;">What you can try:</p>
+                <ul style="font-size: 0.875rem; color: #6b7280; margin-left: 1.25rem;">
+                    <li>Check your card details and try again</li>
+                    <li>Try a different payment method</li>
+                    <li>Contact your bank if the issue persists</li>
+                    <li>Contact our support team for assistance</li>
+                </ul>
+            </div>
+            
+            <!-- Actions -->
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <a asp-action="Checkout" asp-route-bookingId="@Model.Id" class="btn-primary" style="text-align: center;">
+                    Try Again
+                </a>
+                <a asp-controller="Booking" asp-action="MyBookings" class="btn-outline" style="text-align: center;">
+                    Back to My Bookings
+                </a>
+                <a asp-controller="Contact" asp-action="Index" style="color: var(--desert-600); font-size: 0.875rem;">
+                    Contact Support
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

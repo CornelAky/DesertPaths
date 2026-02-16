@@ -1,0 +1,66 @@
+@model IEnumerable<DesertPaths.Models.Entities.Journey>
+@{
+    ViewData["Title"] = "Journeys";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="flex justify-between items-center mb-4">
+    <p style="color: #6b7280;">Manage your travel journeys</p>
+    <a href="@Url.Action("CreateJourney", "Admin")" class="btn btn-primary">+ Add Journey</a>
+</div>
+
+<div class="card">
+    <div class="card-body" style="padding: 0;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Destination</th>
+                    <th>Duration</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var journey in Model)
+                {
+                    <tr>
+                        <td>
+                            <strong>@journey.Title</strong>
+                            @if (journey.IsFeatured)
+                            {
+                                <span class="badge badge-warning" style="margin-left: 0.5rem;">Featured</span>
+                            }
+                        </td>
+                        <td>@journey.Land.Name</td>
+                        <td>@journey.DurationDays days / @journey.DurationNights nights</td>
+                        <td>$@journey.PriceFrom.ToString("N0")</td>
+                        <td>
+                            <span class="badge @(journey.IsActive ? "badge-success" : "badge-danger")">
+                                @(journey.IsActive ? "Active" : "Inactive")
+                            </span>
+                        </td>
+                        <td>
+                            <div class="flex gap-2">
+                                <a href="@Url.Action("EditJourney", "Admin", new { id = journey.Id })" class="btn btn-secondary btn-sm">Edit</a>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <form asp-action="DeleteJourney" asp-route-id="@journey.Id" method="post" style="display: inline;" onsubmit="return confirm('Delete this journey?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        
+        @if (!Model.Any())
+        {
+            <p style="padding: 2rem; text-align: center; color: #6b7280;">No journeys yet. Add your first journey!</p>
+        }
+    </div>
+</div>

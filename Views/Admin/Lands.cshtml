@@ -1,0 +1,66 @@
+@model IEnumerable<DesertPaths.Models.Entities.Land>
+@{
+    ViewData["Title"] = "Destinations";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="flex justify-between items-center mb-4">
+    <p style="color: #6b7280;">Manage your travel destinations</p>
+    <a href="@Url.Action("CreateLand", "Admin")" class="btn btn-primary">+ Add Destination</a>
+</div>
+
+<div class="card">
+    <div class="card-body" style="padding: 0;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Name</th>
+                    <th>Slug</th>
+                    <th>Journeys</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var land in Model)
+                {
+                    <tr>
+                        <td>@land.DisplayOrder</td>
+                        <td>
+                            <strong>@land.Name</strong>
+                            @if (!string.IsNullOrEmpty(land.ShortDescription))
+                            {
+                                <br><small style="color: #6b7280;">@land.ShortDescription.Substring(0, Math.Min(50, land.ShortDescription.Length))...</small>
+                            }
+                        </td>
+                        <td><code style="background: #f3f4f6; padding: 0.125rem 0.5rem; border-radius: 0.25rem;">@land.Slug</code></td>
+                        <td>@land.Journeys.Count</td>
+                        <td>
+                            <span class="badge @(land.IsActive ? "badge-success" : "badge-danger")">
+                                @(land.IsActive ? "Active" : "Inactive")
+                            </span>
+                        </td>
+                        <td>
+                            <div class="flex gap-2">
+                                <a href="@Url.Action("EditLand", "Admin", new { id = land.Id })" class="btn btn-secondary btn-sm">Edit</a>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <form asp-action="DeleteLand" asp-route-id="@land.Id" method="post" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this destination? This will also delete all associated journeys.');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        
+        @if (!Model.Any())
+        {
+            <p style="padding: 2rem; text-align: center; color: #6b7280;">No destinations yet. Add your first destination!</p>
+        }
+    </div>
+</div>

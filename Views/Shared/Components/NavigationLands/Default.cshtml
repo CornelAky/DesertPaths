@@ -1,0 +1,7 @@
+@model IEnumerable<dynamic>
+
+<li><a asp-controller="Lands" asp-action="Index">All Lands</a></li>
+@foreach (var land in Model)
+{
+    <li><a asp-controller="Lands" asp-action="Details" asp-route-slug="@land.Slug">@land.Name</a></li>
+}

@@ -1,0 +1,125 @@
+@model DesertPaths.Models.Entities.Booking
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<section class="hero" style="min-height: 40vh;">
+    <div class="hero-content">
+        <h1 class="hero-title" style="font-size: 2.5rem;">Complete Your Payment</h1>
+        <p class="hero-subtitle">Secure payment powered by PayTabs</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container" style="max-width: 800px;">
+        @if (TempData["Error"] != null)
+        {
+            <div style="background-color: #fee2e2; border: 1px solid #ef4444; color: #991b1b; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+                @TempData["Error"]
+            </div>
+        }
+        
+        <div style="display: grid; grid-template-columns: 1fr; gap: 2rem;">
+            <style>
+                @@media (min-width: 768px) {
+                    .checkout-grid { grid-template-columns: 1.5fr 1fr !important; }
+                }
+            </style>
+            
+            <div class="checkout-grid" style="display: grid; grid-template-columns: 1fr; gap: 2rem;">
+                <!-- Order Summary -->
+                <div class="card" style="padding: 2rem;">
+                    <h2 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem;">Order Summary</h2>
+                    
+                    <div style="display: flex; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb; margin-bottom: 1.5rem;">
+                        @if (!string.IsNullOrEmpty(Model.Journey.HeroImageUrl))
+                        {
+                            <img src="@Model.Journey.HeroImageUrl" alt="@Model.Journey.Title" style="width: 120px; height: 80px; object-fit: cover; border-radius: 0.5rem;" />
+                        }
+                        <div>
+                            <p style="font-size: 0.875rem; color: #6b7280;">@Model.Journey.Land.Name</p>
+                            <h3 style="font-weight: 600;">@Model.Journey.Title</h3>
+                            <p style="font-size: 0.875rem; color: #6b7280;">@Model.Journey.DurationDays days / @Model.Journey.DurationNights nights</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #6b7280;">Booking Reference</span>
+                            <span style="font-family: monospace; font-weight: 600;">@Model.BookingReference</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #6b7280;">Travel Date</span>
+                            <span>@Model.TravelDate.ToString("MMM dd, yyyy")</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #6b7280;">Travel Style</span>
+                            <span>@Model.Style.Name</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #6b7280;">Number of Guests</span>
+                            <span>@Model.NumberOfGuests @(Model.NumberOfGuests == 1 ? "person" : "people")</span>
+                        </div>
+                    </div>
+                    
+                    <div style="border-top: 2px solid #111827; padding-top: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 600; font-size: 1.125rem;">Total Amount</span>
+                            <span style="font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--desert-600);">
+                                $@Model.TotalPrice.ToString("N0")
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Payment Form -->
+                <div class="card" style="padding: 2rem;">
+                    <h2 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem;">Payment</h2>
+                    
+                    <!-- Payment Methods -->
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" style="height: 24px;" />
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" style="height: 24px;" />
+                        <img src="https://brand.mastercard.com/content/dam/mccom/brandcenter/thumbnails/mada_vrt_pos_92px.png" alt="Mada" style="height: 24px;" />
+                    </div>
+                    
+                    <div style="background-color: #f0fdf4; border: 1px solid #86efac; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; color: #166534;">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                            <span style="font-weight: 500;">Secure Payment</span>
+                        </div>
+                        <p style="font-size: 0.875rem; color: #166534; margin-top: 0.5rem;">
+                            Your payment is secured by PayTabs. We never store your card details.
+                        </p>
+                    </div>
+                    
+                    <form asp-action="ProcessPayment" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="bookingId" value="@Model.Id" />
+                        
+                        <button type="submit" class="btn-primary" style="width: 100%; text-align: center; padding: 1rem; font-size: 1.125rem;">
+                            <span style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                </svg>
+                                Pay $@Model.TotalPrice.ToString("N0")
+                            </span>
+                        </button>
+                    </form>
+                    
+                    <p style="font-size: 0.75rem; color: #6b7280; text-align: center; margin-top: 1rem;">
+                        By clicking "Pay", you agree to our Terms of Service and Privacy Policy.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <a asp-controller="Booking" asp-action="MyBookings" style="color: var(--desert-600);">
+                ← Back to My Bookings
+            </a>
+        </div>
+    </div>
+</section>

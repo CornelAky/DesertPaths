@@ -1,0 +1,116 @@
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<!-- Hero Section -->
+<section class="hero" style="min-height: 40vh;">
+    <div class="hero-content">
+        <h1 class="hero-title">Contact Us</h1>
+        <p class="hero-subtitle">
+            Have questions about our journeys? We'd love to hear from you.
+        </p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container" style="max-width: 1000px;">
+        <div style="display: grid; grid-template-columns: 1fr; gap: 3rem;">
+            @* Contact form on left, info on right *@
+            <style>
+                @@media (min-width: 768px) {
+                    .contact-grid {
+                        grid-template-columns: 1.5fr 1fr !important;
+                    }
+                }
+            </style>
+            
+            <div class="contact-grid" style="display: grid; grid-template-columns: 1fr; gap: 3rem;">
+                <!-- Contact Form -->
+                <div class="card" style="padding: 2rem;">
+                    <h2 style="font-weight: 600; margin-bottom: 1.5rem;">Send us a message</h2>
+                    
+                    @if (TempData["Success"] != null)
+                    {
+                        <div style="background-color: #d1fae5; border: 1px solid #10b981; color: #065f46; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+                            @TempData["Success"]
+                        </div>
+                    }
+                    
+                    <form asp-action="Submit" method="post">
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Name</label>
+                            <input type="text" name="name" required 
+                                   style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem;">
+                        </div>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Email</label>
+                            <input type="email" name="email" required 
+                                   style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem;">
+                        </div>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Subject</label>
+                            <select name="subject" required 
+                                    style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem;">
+                                <option value="">Select a subject</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="booking">Booking Question</option>
+                                <option value="custom">Custom Journey Request</option>
+                                <option value="feedback">Feedback</option>
+                            </select>
+                        </div>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Message</label>
+                            <textarea name="message" rows="5" required 
+                                      style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem; resize: vertical;"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary" style="width: 100%;">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Contact Info -->
+                <div>
+                    <div class="card" style="padding: 1.5rem; margin-bottom: 1.5rem;">
+                        <h3 style="font-weight: 600; margin-bottom: 1rem;">?? Our Office</h3>
+                        <p style="color: #6b7280;">
+                            Desert Paths Headquarters<br>
+                            King Fahd Road<br>
+                            Riyadh 12345<br>
+                            Saudi Arabia
+                        </p>
+                    </div>
+                    
+                    <div class="card" style="padding: 1.5rem; margin-bottom: 1.5rem;">
+                        <h3 style="font-weight: 600; margin-bottom: 1rem;">?? Phone</h3>
+                        <p style="color: #6b7280;">
+                            +966 12 345 6789<br>
+                            <span style="font-size: 0.875rem;">Sun - Thu: 9am - 6pm</span>
+                        </p>
+                    </div>
+                    
+                    <div class="card" style="padding: 1.5rem; margin-bottom: 1.5rem;">
+                        <h3 style="font-weight: 600; margin-bottom: 1rem;">?? Email</h3>
+                        <p style="color: #6b7280;">
+                            info@desertpaths.com<br>
+                            bookings@desertpaths.com
+                        </p>
+                    </div>
+                    
+                    <div class="card" style="padding: 1.5rem;">
+                        <h3 style="font-weight: 600; margin-bottom: 1rem;">?? Social Media</h3>
+                        <div style="display: flex; gap: 1rem;">
+                            <a href="#" style="color: var(--desert-600);">Instagram</a>
+                            <a href="#" style="color: var(--desert-600);">Facebook</a>
+                            <a href="#" style="color: var(--desert-600);">Twitter</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

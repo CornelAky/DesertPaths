@@ -1,0 +1,51 @@
+@page
+@model EnableAuthenticatorModel
+@{
+    ViewData["Title"] = "Configure Authenticator App";
+    ViewData["ActivePage"] = "TwoFactorAuthentication";
+}
+
+<div class="card" style="padding: 2rem;">
+    <h2 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem;">Configure Authenticator App</h2>
+    
+    <p style="color: #6b7280; margin-bottom: 1.5rem;">
+        To use an authenticator app go through the following steps:
+    </p>
+    
+    <ol style="margin-left: 1.5rem; color: #374151; line-height: 2;">
+        <li>
+            Download a two-factor authenticator app like Google Authenticator or Microsoft Authenticator.
+        </li>
+        <li style="margin-top: 1rem;">
+            Scan the QR Code or enter this key <kbd style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-family: monospace;">@Model.SharedKey</kbd> into your authenticator app.
+        </li>
+        <li style="margin-top: 1rem;">
+            <div style="margin: 1rem 0; padding: 1rem; background: #f9fafb; border-radius: 0.5rem; display: inline-block;">
+                <img src="@Model.AuthenticatorUri" alt="QR Code" style="width: 200px; height: 200px;" />
+            </div>
+        </li>
+        <li style="margin-top: 1rem;">
+            Once you have scanned the QR code or input the key above, your authenticator app will provide you with a unique code. Enter the code in the confirmation box below.
+        </li>
+    </ol>
+    
+    <form id="send-code" method="post" style="max-width: 300px; margin-top: 1.5rem;">
+        <div asp-validation-summary="ModelOnly" style="color: #dc2626; margin-bottom: 1rem;"></div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label asp-for="Input.Code" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Verification Code</label>
+            <input asp-for="Input.Code" autocomplete="off"
+                   style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 1.25rem; text-align: center; letter-spacing: 0.25rem;" 
+                   placeholder="000000" />
+            <span asp-validation-for="Input.Code" style="color: #dc2626; font-size: 0.875rem;"></span>
+        </div>
+        
+        <button type="submit" class="btn-primary" style="width: 100%; padding: 0.75rem;">
+            Verify
+        </button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

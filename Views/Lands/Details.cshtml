@@ -1,0 +1,86 @@
+@model DesertPaths.Models.Entities.Land
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<!-- Hero Section -->
+<section class="hero" style="min-height: 60vh; background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('@(Model.HeroImageUrl ?? "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1920&h=1080&fit=crop")'); background-size: cover; background-position: center;">
+    <div class="hero-content">
+        <h1 class="hero-title">@Model.Name</h1>
+        <p class="hero-subtitle">@Model.ShortDescription</p>
+    </div>
+</section>
+
+<!-- About Section -->
+@if (!string.IsNullOrEmpty(Model.FullDescription))
+{
+    <section class="section">
+        <div class="container" style="max-width: 800px;">
+            <div class="section-header">
+                <h2 class="section-title">About @Model.Name</h2>
+            </div>
+            <div style="color: #4b5563; line-height: 1.8;">
+                @Html.Raw(Model.FullDescription)
+            </div>
+        </div>
+    </section>
+}
+
+<!-- Journeys Section -->
+<section class="section section-light">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Journeys in @Model.Name</h2>
+            <p class="section-subtitle">Choose your perfect adventure</p>
+        </div>
+        
+        @if (Model.Journeys.Any())
+        {
+            <div class="grid grid-3">
+                @foreach (var journey in Model.Journeys.Where(j => j.IsActive))
+                {
+                    <div class="card">
+                        @if (!string.IsNullOrEmpty(journey.HeroImageUrl))
+                        {
+                            <img src="@journey.HeroImageUrl" alt="@journey.Title" class="card-image">
+                        }
+                        else
+                        {
+                            <img src="https://images.unsplash.com/photo-1547234935-80c7145ec969?w=600&h=400&fit=crop" alt="@journey.Title" class="card-image">
+                        }
+                        <div class="card-body">
+                            @if (journey.IsFeatured)
+                            {
+                                <span class="badge badge-primary">Featured</span>
+                            }
+                            <h3 class="card-title" style="margin-top: 0.5rem;">@journey.Title</h3>
+                            <p class="card-text">@journey.ShortDescription</p>
+                            
+                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem; font-size: 0.875rem; color: #6b7280;">
+                                <span>?? @journey.DurationDays days</span>
+                                <span>?? Max @journey.MaxGroupSize</span>
+                            </div>
+                            
+                            <div class="card-footer">
+                                <div class="price">
+                                    <span class="price-from">From</span>
+                                    $@journey.PriceFrom.ToString("N0")
+                                </div>
+                                <a asp-controller="Journeys" asp-action="Details" asp-route-slug="@journey.Slug" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center" style="padding: 4rem 0;">
+                <h3 style="color: #6b7280; margin-bottom: 1rem;">No journeys available yet</h3>
+                <p style="color: #9ca3af;">We're working on exciting new adventures for this destination!</p>
+            </div>
+        }
+    </div>
+</section>

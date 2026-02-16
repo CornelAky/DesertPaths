@@ -1,0 +1,57 @@
+@page
+@model DeletePersonalDataModel
+@{
+    ViewData["Title"] = "Delete Personal Data";
+    ViewData["ActivePage"] = "DeletePersonalData";
+}
+
+<div class="card" style="padding: 2rem; border: 2px solid #fecaca;">
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <div style="width: 4rem; height: 4rem; background-color: #fee2e2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+            <svg width="32" height="32" fill="none" stroke="#dc2626" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+        </div>
+        
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: #991b1b;">Delete Your Account</h2>
+        <p style="color: #6b7280; margin-top: 0.5rem;">This action is permanent and cannot be undone.</p>
+    </div>
+    
+    <div style="background-color: #fee2e2; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+        <h3 style="font-weight: 600; color: #991b1b; margin-bottom: 0.5rem;">What will be deleted:</h3>
+        <ul style="font-size: 0.875rem; color: #7f1d1d; margin-left: 1.25rem;">
+            <li>Your account and profile information</li>
+            <li>All your booking history</li>
+            <li>All reviews you have written</li>
+            <li>Your payment history</li>
+        </ul>
+    </div>
+    
+    <form id="delete-user" method="post" style="max-width: 400px; margin: 0 auto;">
+        <div asp-validation-summary="ModelOnly" style="color: #dc2626; margin-bottom: 1rem;"></div>
+        
+        @if (Model.RequirePassword)
+        {
+            <div style="margin-bottom: 1.5rem;">
+                <label asp-for="Input.Password" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Enter your password to confirm</label>
+                <input asp-for="Input.Password" type="password" autocomplete="current-password"
+                       style="width: 100%; padding: 0.75rem; border: 1px solid #fecaca; border-radius: 0.5rem; font-size: 1rem;" 
+                       placeholder="Your current password" />
+                <span asp-validation-for="Input.Password" style="color: #dc2626; font-size: 0.875rem;"></span>
+            </div>
+        }
+        
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <a asp-page="./PersonalData" class="btn-outline" style="padding: 0.75rem 1.5rem;">
+                Cancel
+            </a>
+            <button type="submit" style="padding: 0.75rem 1.5rem; background-color: #dc2626; color: white; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600;">
+                Delete My Account Forever
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

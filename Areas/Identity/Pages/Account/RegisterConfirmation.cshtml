@@ -1,0 +1,35 @@
+@page
+@model RegisterConfirmationModel
+@{
+    ViewData["Title"] = "Registration Confirmation";
+}
+
+<section class="section" style="min-height: 80vh; display: flex; align-items: center;">
+    <div class="container" style="max-width: 500px;">
+        <div class="card" style="padding: 2.5rem; text-align: center;">
+            <div style="width: 4rem; height: 4rem; background-color: var(--desert-100); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                <svg width="32" height="32" fill="none" stroke="var(--desert-600)" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+            
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.75rem; font-weight: 700; color: #111827; margin-bottom: 1rem;">Check Your Email</h1>
+            
+            <p style="color: #6b7280; margin-bottom: 1.5rem;">
+                We've sent a confirmation link to <strong>@Model.Email</strong>. 
+                Please check your inbox and click the link to activate your account.
+            </p>
+            
+            <div style="background-color: #f9fafb; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+                <p style="font-size: 0.875rem; color: #6b7280;">
+                    Didn't receive the email? Check your spam folder or 
+                    <a asp-page="./ResendEmailConfirmation" style="color: var(--desert-600);">resend confirmation email</a>.
+                </p>
+            </div>
+            
+            <a asp-controller="Home" asp-action="Index" class="btn-outline">
+                Return to Home
+            </a>
+        </div>
+    </div>
+</section>

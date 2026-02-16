@@ -1,0 +1,174 @@
+@model DesertPaths.ViewModels.CreateReviewViewModel
+@{
+    ViewData["Title"] = "Write a Review";
+}
+
+<section class="hero" style="min-height: 35vh; background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('@(Model.JourneyImageUrl ?? "https://images.unsplash.com/photo-1547234935-80c7145ec969?w=1920&h=1080&fit=crop")'); background-size: cover; background-position: center;">
+    <div class="hero-content">
+        <p style="color: var(--sand-300); margin-bottom: 0.5rem;">@Model.LandName</p>
+        <h1 class="hero-title" style="font-size: 2rem;">Review: @Model.JourneyTitle</h1>
+        <p class="hero-subtitle">Share your experience with other travelers</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container" style="max-width: 600px;">
+        <div class="card" style="padding: 2rem;">
+            <form asp-action="Review" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="BookingId" />
+                <input type="hidden" asp-for="JourneyId" />
+                
+                <div asp-validation-summary="ModelOnly" style="color: #dc2626; margin-bottom: 1rem;"></div>
+                
+                <!-- Journey Info -->
+                <div style="display: flex; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb;">
+                    @if (!string.IsNullOrEmpty(Model.JourneyImageUrl))
+                    {
+                        <img src="@Model.JourneyImageUrl" alt="@Model.JourneyTitle" 
+                             style="width: 80px; height: 80px; object-fit: cover; border-radius: 0.5rem;" />
+                    }
+                    <div>
+                        <p style="font-weight: 600;">@Model.JourneyTitle</p>
+                        <p style="font-size: 0.875rem; color: #6b7280;">@Model.LandName</p>
+                        <p style="font-size: 0.875rem; color: #6b7280;">Traveled on @Model.TravelDate.ToString("MMMM dd, yyyy")</p>
+                    </div>
+                </div>
+                
+                <!-- Star Rating -->
+                <div style="margin-bottom: 2rem;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 0.75rem;">How would you rate your experience? *</label>
+                    
+                    <div class="star-rating" style="display: flex; gap: 0.5rem; justify-content: center;">
+                        @for (int i = 5; i >= 1; i--)
+                        {
+                            <input type="radio" id="star@(i)" name="Rating" value="@i" 
+                                   style="display: none;" @(Model.Rating == i ? "checked" : "") />
+                            <label for="star@(i)" style="cursor: pointer; font-size: 2.5rem; color: #d1d5db; transition: color 0.2s;"
+                                   onmouseover="highlightStars(@i)" onmouseout="resetStars()" onclick="selectRating(@i)">
+                                ★
+                            </label>
+                        }
+                    </div>
+                    
+                    <p id="ratingText" style="text-align: center; margin-top: 0.5rem; font-size: 0.875rem; color: #6b7280;">
+                        Click a star to rate
+                    </p>
+                    <span asp-validation-for="Rating" style="color: #dc2626; font-size: 0.875rem; display: block; text-align: center;"></span>
+                </div>
+                
+                <!-- Comment -->
+                <div style="margin-bottom: 2rem;">
+                    <label asp-for="Comment" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">
+                        Tell us about your experience (Optional)
+                    </label>
+                    <textarea asp-for="Comment" rows="5" 
+                              placeholder="What did you love about this journey? Any highlights or memorable moments?"
+                              style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem; resize: vertical;"></textarea>
+                    <p style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">
+                        <span id="charCount">0</span>/1000 characters
+                    </p>
+                    <span asp-validation-for="Comment" style="color: #dc2626; font-size: 0.875rem;"></span>
+                </div>
+                
+                <!-- Info Box -->
+                <div style="background-color: var(--desert-50); border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+                    <p style="font-size: 0.875rem; color: var(--desert-700);">
+                        <strong>Note:</strong> Your review will be published after approval by our team. 
+                        We review all feedback to ensure quality and relevance.
+                    </p>
+                </div>
+                
+                <!-- Submit -->
+                <div style="display: flex; gap: 1rem;">
+                    <a asp-action="MyBookings" class="btn-outline" style="flex: 1; text-align: center;">Cancel</a>
+                    <button type="submit" class="btn-primary" style="flex: 1;">Submit Review</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<style>
+    .star-rating {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: center;
+    }
+    .star-rating label:hover,
+    .star-rating label:hover ~ label,
+    .star-rating input:checked ~ label {
+        color: #f59e0b !important;
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const ratingTexts = {
+            1: 'Poor - Did not meet expectations',
+            2: 'Fair - Below average experience',
+            3: 'Good - Met expectations',
+            4: 'Very Good - Exceeded expectations',
+            5: 'Excellent - Outstanding experience!'
+        };
+        
+        let selectedRating = @Model.Rating;
+        
+        function selectRating(rating) {
+            selectedRating = rating;
+            document.getElementById('star' + rating).checked = true;
+            updateRatingText(rating);
+            updateStarColors();
+        }
+        
+        function highlightStars(rating) {
+            const stars = document.querySelectorAll('.star-rating label');
+            stars.forEach((star, index) => {
+                const starValue = 5 - index;
+                star.style.color = starValue <= rating ? '#f59e0b' : '#d1d5db';
+            });
+            updateRatingText(rating);
+        }
+        
+        function resetStars() {
+            updateStarColors();
+            if (selectedRating > 0) {
+                updateRatingText(selectedRating);
+            } else {
+                document.getElementById('ratingText').textContent = 'Click a star to rate';
+            }
+        }
+        
+        function updateStarColors() {
+            const stars = document.querySelectorAll('.star-rating label');
+            stars.forEach((star, index) => {
+                const starValue = 5 - index;
+                star.style.color = starValue <= selectedRating ? '#f59e0b' : '#d1d5db';
+            });
+        }
+        
+        function updateRatingText(rating) {
+            document.getElementById('ratingText').textContent = ratingTexts[rating] || 'Click a star to rate';
+        }
+        
+        // Character count for comment
+        const commentField = document.getElementById('Comment');
+        const charCount = document.getElementById('charCount');
+        
+        commentField.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+            if (this.value.length > 1000) {
+                charCount.style.color = '#dc2626';
+            } else {
+                charCount.style.color = '#6b7280';
+            }
+        });
+        
+        // Initialize
+        if (selectedRating > 0) {
+            updateStarColors();
+            updateRatingText(selectedRating);
+        }
+    </script>
+}

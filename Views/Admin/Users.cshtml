@@ -1,0 +1,85 @@
+@model IEnumerable<DesertPaths.Models.Entities.ApplicationUser>
+@{
+    ViewData["Title"] = "Users";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var userRoles = ViewBag.UserRoles as Dictionary<string, IList<string>>;
+}
+
+<div class="card">
+    <div class="card-body" style="padding: 0;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Joined</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    var roles = userRoles?[user.Id] ?? new List<string>();
+                    var primaryRole = roles.Contains("Admin") ? "Admin" : roles.Contains("Manager") ? "Manager" : "Customer";
+                    
+                    <tr>
+                        <td>
+                            <strong>@user.FullName</strong>
+                        </td>
+                        <td>@user.Email</td>
+                        <td>
+                            <span class="badge @(primaryRole == "Admin" ? "badge-danger" : primaryRole == "Manager" ? "badge-warning" : "badge-info")">
+                                @primaryRole
+                            </span>
+                        </td>
+                        <td>
+                            @if (user.IsBlocked)
+                            {
+                                <span class="badge badge-danger">Blocked</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-success">Active</span>
+                            }
+                        </td>
+                        <td>@user.CreatedAt.ToString("MMM dd, yyyy")</td>
+                        <td>
+                            @if (primaryRole != "Admin")
+                            {
+                                <div class="flex gap-2">
+                                    @if (primaryRole == "Customer")
+                                    {
+                                        <form asp-action="PromoteToManager" asp-route-userId="@user.Id" method="post" style="display: inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-secondary btn-sm">Promote to Manager</button>
+                                        </form>
+                                    }
+                                    else if (primaryRole == "Manager")
+                                    {
+                                        <form asp-action="DemoteToCustomer" asp-route-userId="@user.Id" method="post" style="display: inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-secondary btn-sm">Demote to Customer</button>
+                                        </form>
+                                    }
+                                    
+                                    <form asp-action="ToggleBlockUser" asp-route-userId="@user.Id" method="post" style="display: inline;">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn @(user.IsBlocked ? "btn-success" : "btn-danger") btn-sm">
+                                            @(user.IsBlocked ? "Unblock" : "Block")
+                                        </button>
+                                    </form>
+                                </div>
+                            }
+                            else
+                            {
+                                <span style="color: #6b7280; font-size: 0.875rem;">—</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

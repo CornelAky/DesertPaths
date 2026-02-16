@@ -1,0 +1,58 @@
+@page
+@model PersonalDataModel
+@{
+    ViewData["Title"] = "Personal Data";
+    ViewData["ActivePage"] = "PersonalData";
+}
+
+<div class="card" style="padding: 2rem;">
+    <h2 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">Personal Data</h2>
+    
+    <p style="color: #6b7280; margin-bottom: 1.5rem;">
+        Your account contains personal data that you have given us. This page allows you to download or delete that data.
+    </p>
+    
+    <div style="background-color: #fef3c7; border: 1px solid #fcd34d; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+        <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+            <svg width="24" height="24" fill="none" stroke="#92400e" viewBox="0 0 24 24" style="flex-shrink: 0;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <div>
+                <p style="font-weight: 600; color: #92400e;">Deleting this data will permanently remove your account</p>
+                <p style="font-size: 0.875rem; color: #78350f;">This cannot be recovered.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card" style="padding: 2rem; margin-top: 1.5rem;">
+    <h3 style="font-weight: 600; margin-bottom: 1rem;">Download Your Data</h3>
+    <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 1rem;">
+        Download a copy of your personal data including your profile information and booking history.
+    </p>
+    
+    <form asp-page-handler="DownloadPersonalData" method="post">
+        <button type="submit" class="btn-outline" style="padding: 0.75rem 1.5rem;">
+            <span style="display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                Download Personal Data
+            </span>
+        </button>
+    </form>
+</div>
+
+<div class="card" style="padding: 2rem; margin-top: 1.5rem; border: 1px solid #fecaca;">
+    <h3 style="font-weight: 600; margin-bottom: 1rem; color: #991b1b;">Delete Account</h3>
+    <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 1rem;">
+        Permanently delete your account and all associated data. This action cannot be undone.
+    </p>
+    
+    <a asp-page="DeletePersonalData" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background-color: #fee2e2; color: #991b1b; border-radius: 0.5rem; text-decoration: none; font-weight: 500;">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+        </svg>
+        Delete My Account
+    </a>
+</div>

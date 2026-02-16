@@ -1,0 +1,73 @@
+@model DesertPaths.Models.Entities.Land
+@{
+    ViewData["Title"] = Model.Id == 0 ? "Add Destination" : "Edit Destination";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card" style="max-width: 800px;">
+    <div class="card-header">@ViewData["Title"]</div>
+    <div class="card-body">
+        <form asp-action="@(Model.Id == 0 ? "CreateLand" : "EditLand")" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="CreatedAt" />
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label asp-for="Name" class="form-label">Name *</label>
+                    <input asp-for="Name" class="form-control" required />
+                    <span asp-validation-for="Name" style="color: #dc2626; font-size: 0.875rem;"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label asp-for="Slug" class="form-label">Slug (auto-generated if empty)</label>
+                    <input asp-for="Slug" class="form-control" placeholder="e.g., saudi-arabia" />
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="ShortDescription" class="form-label">Short Description</label>
+                <textarea asp-for="ShortDescription" class="form-control" rows="2" maxlength="500" placeholder="Brief description for cards and previews"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="FullDescription" class="form-label">Full Description (HTML allowed)</label>
+                <textarea asp-for="FullDescription" class="form-control" rows="5" placeholder="Detailed description with HTML formatting"></textarea>
+            </div>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label asp-for="HeroImageUrl" class="form-label">Hero Image URL</label>
+                    <input asp-for="HeroImageUrl" class="form-control" type="url" placeholder="https://..." />
+                </div>
+                
+                <div class="form-group">
+                    <label asp-for="ThumbnailUrl" class="form-label">Thumbnail URL</label>
+                    <input asp-for="ThumbnailUrl" class="form-control" type="url" placeholder="https://..." />
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label asp-for="DisplayOrder" class="form-label">Display Order</label>
+                    <input asp-for="DisplayOrder" class="form-control" type="number" min="0" />
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <div class="form-check" style="margin-top: 0.5rem;">
+                        <input asp-for="IsActive" type="checkbox" />
+                        <label asp-for="IsActive">Active (visible on site)</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-primary">
+                    @(Model.Id == 0 ? "Create Destination" : "Save Changes")
+                </button>
+                <a href="@Url.Action("Lands", "Admin")" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

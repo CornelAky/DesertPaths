@@ -1,0 +1,89 @@
+@{
+    ViewData["Title"] = "Test Payment";
+    var transRef = ViewBag.TransactionReference as string;
+    var amount = ViewBag.Amount;
+    var currency = ViewBag.Currency as string;
+    var orderId = ViewBag.OrderId as string;
+    var email = ViewBag.Email as string;
+    var returnUrl = ViewBag.ReturnUrl as string;
+}
+
+<section class="section" style="min-height: 100vh; display: flex; align-items: center; background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%);">
+    <div class="container" style="max-width: 450px;">
+        <div class="card" style="padding: 2rem;">
+            <!-- Mock Badge -->
+            <div style="background-color: #fef3c7; border: 1px solid #fcd34d; color: #92400e; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 1.5rem; text-align: center;">
+                <strong>🧪 TEST MODE</strong>
+                <p style="font-size: 0.75rem; margin-top: 0.25rem;">This is a simulated payment page for development</p>
+            </div>
+            
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <h1 style="font-size: 1.5rem; font-weight: 700; color: #111827;">Complete Payment</h1>
+                <p style="color: #6b7280; font-size: 0.875rem;">Order: @orderId</p>
+            </div>
+            
+            <!-- Amount -->
+            <div style="background-color: #f3f4f6; border-radius: 0.5rem; padding: 1.5rem; text-align: center; margin-bottom: 1.5rem;">
+                <p style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase;">Amount to Pay</p>
+                <p style="font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; color: var(--desert-600);">
+                    @currency @amount
+                </p>
+            </div>
+            
+            <!-- Fake Card Form (just for show) -->
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; font-size: 0.875rem;">Card Number</label>
+                <input type="text" value="4000 0000 0000 0002" readonly
+                       style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; background: #f9fafb;" />
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                    <div>
+                        <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; font-size: 0.875rem;">Expiry</label>
+                        <input type="text" value="12/28" readonly
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; background: #f9fafb;" />
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; font-size: 0.875rem;">CVV</label>
+                        <input type="text" value="123" readonly
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; background: #f9fafb;" />
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Test Actions -->
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <form asp-action="MockComplete" method="post">
+                    <input type="hidden" name="transRef" value="@transRef" />
+                    <input type="hidden" name="success" value="true" />
+                    <input type="hidden" name="returnUrl" value="@returnUrl" />
+                    <button type="submit" class="btn-primary" style="width: 100%; padding: 1rem; font-size: 1rem;">
+                        ✓ Simulate Successful Payment
+                    </button>
+                </form>
+                
+                <form asp-action="MockComplete" method="post">
+                    <input type="hidden" name="transRef" value="@transRef" />
+                    <input type="hidden" name="success" value="false" />
+                    <input type="hidden" name="returnUrl" value="@returnUrl" />
+                    <button type="submit" style="width: 100%; padding: 1rem; font-size: 1rem; background-color: #fee2e2; color: #991b1b; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600;">
+                        ✗ Simulate Failed Payment
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Info -->
+            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
+                <p style="font-size: 0.75rem; color: #6b7280; text-align: center;">
+                    <strong>Transaction Reference:</strong> @transRef
+                    <br>
+                    <strong>Email:</strong> @email
+                </p>
+            </div>
+        </div>
+        
+        <p style="text-align: center; color: white; margin-top: 1rem; font-size: 0.75rem; opacity: 0.7;">
+            This mock payment page simulates the PayTabs checkout experience.
+            <br>In production, users will be redirected to the actual PayTabs payment page.
+        </p>
+    </div>
+</section>

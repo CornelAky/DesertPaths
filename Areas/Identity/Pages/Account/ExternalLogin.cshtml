@@ -1,0 +1,54 @@
+@page
+@model ExternalLoginModel
+@{
+    ViewData["Title"] = "Complete Registration";
+}
+
+<section class="hero" style="min-height: 100vh; padding-top: 6rem;">
+    <div class="hero-content" style="max-width: 450px; width: 100%;">
+        <div class="card" style="padding: 2.5rem; text-align: left; background: white;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h1 style="font-family: 'Playfair Display', serif; font-size: 1.75rem; font-weight: 700; color: #111827;">Complete Your Profile</h1>
+                <p style="color: #6b7280;">
+                    You've successfully authenticated with <strong>@Model.ProviderDisplayName</strong>.
+                    Please enter your details below.
+                </p>
+            </div>
+
+            <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                <div asp-validation-summary="ModelOnly" style="color: #dc2626; margin-bottom: 1rem;"></div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div>
+                        <label asp-for="Input.FirstName" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">First Name</label>
+                        <input asp-for="Input.FirstName" 
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem;" />
+                        <span asp-validation-for="Input.FirstName" style="color: #dc2626; font-size: 0.75rem;"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Input.LastName" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Last Name</label>
+                        <input asp-for="Input.LastName" 
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem;" />
+                        <span asp-validation-for="Input.LastName" style="color: #dc2626; font-size: 0.75rem;"></span>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label asp-for="Input.Email" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Email</label>
+                    <input asp-for="Input.Email" autocomplete="email" 
+                           style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem; background-color: #f9fafb;" 
+                           readonly="@(!string.IsNullOrEmpty(Model.Input.Email))" />
+                    <span asp-validation-for="Input.Email" style="color: #dc2626; font-size: 0.875rem;"></span>
+                </div>
+                
+                <button type="submit" class="btn-primary" style="width: 100%; text-align: center; padding: 0.875rem;">
+                    Complete Registration
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

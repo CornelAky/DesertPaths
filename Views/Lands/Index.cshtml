@@ -1,0 +1,57 @@
+@model IEnumerable<DesertPaths.Models.Entities.Land>
+@{
+    ViewData["Title"] = "Destinations";
+}
+
+<!-- Hero Section -->
+<section class="hero" style="min-height: 50vh;">
+    <div class="hero-content">
+        <h1 class="hero-title">Our Destinations</h1>
+        <p class="hero-subtitle">
+            Explore extraordinary lands where ancient history meets breathtaking natural beauty.
+        </p>
+    </div>
+</section>
+
+<!-- Destinations Grid -->
+<section class="section">
+    <div class="container">
+        @if (Model.Any())
+        {
+            <div class="grid grid-3">
+                @foreach (var land in Model)
+                {
+                    <div class="card">
+                        @if (!string.IsNullOrEmpty(land.ThumbnailUrl))
+                        {
+                            <img src="@land.ThumbnailUrl" alt="@land.Name" class="card-image">
+                        }
+                        else
+                        {
+                            <img src="https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=600&h=400&fit=crop" alt="@land.Name" class="card-image">
+                        }
+                        <div class="card-body">
+                            <h3 class="card-title">@land.Name</h3>
+                            <p class="card-text">@land.ShortDescription</p>
+                            <div class="card-footer">
+                                <span style="color: #6b7280; font-size: 0.875rem;">
+                                    @land.Journeys.Count(j => j.IsActive) journeys available
+                                </span>
+                                <a asp-action="Details" asp-route-slug="@land.Slug" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                                    Explore
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center" style="padding: 4rem 0;">
+                <h3 style="color: #6b7280; margin-bottom: 1rem;">No destinations available yet</h3>
+                <p style="color: #9ca3af;">Check back soon for exciting new destinations!</p>
+            </div>
+        }
+    </div>
+</section>

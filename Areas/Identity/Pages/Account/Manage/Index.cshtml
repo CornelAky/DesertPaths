@@ -1,0 +1,76 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["ActivePage"] = "Index";
+}
+
+<div class="card" style="padding: 2rem;">
+    <h2 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem;">Profile Information</h2>
+    
+    <partial name="_StatusMessage" for="StatusMessage" />
+    
+    <form id="profile-form" method="post">
+        <div asp-validation-summary="ModelOnly" style="color: #dc2626; margin-bottom: 1rem;"></div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+            <div>
+                <label asp-for="Input.FirstName" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">First Name</label>
+                <input asp-for="Input.FirstName" 
+                       style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem;" />
+                <span asp-validation-for="Input.FirstName" style="color: #dc2626; font-size: 0.875rem;"></span>
+            </div>
+            <div>
+                <label asp-for="Input.LastName" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Last Name</label>
+                <input asp-for="Input.LastName" 
+                       style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem;" />
+                <span asp-validation-for="Input.LastName" style="color: #dc2626; font-size: 0.875rem;"></span>
+            </div>
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label asp-for="Input.PhoneNumber" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Phone Number</label>
+            <input asp-for="Input.PhoneNumber" 
+                   style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem;" 
+                   placeholder="+966 5X XXX XXXX" />
+            <span asp-validation-for="Input.PhoneNumber" style="color: #dc2626; font-size: 0.875rem;"></span>
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Email</label>
+            <input type="email" value="@Model.Username" disabled
+                   style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem; background-color: #f9fafb; color: #6b7280;" />
+            <p style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">
+                To change your email, go to the <a asp-page="./Email" style="color: var(--desert-600);">Email</a> page.
+            </p>
+        </div>
+        
+        <button type="submit" class="btn-primary" style="padding: 0.75rem 2rem;">
+            Save Changes
+        </button>
+    </form>
+</div>
+
+<!-- Account Stats -->
+<div class="card" style="padding: 2rem; margin-top: 1.5rem;">
+    <h3 style="font-weight: 600; margin-bottom: 1rem;">Account Statistics</h3>
+    
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+        <div style="text-align: center; padding: 1rem; background-color: #f9fafb; border-radius: 0.5rem;">
+            <p style="font-size: 2rem; font-weight: 700; color: var(--desert-600);">@Model.TotalBookings</p>
+            <p style="font-size: 0.875rem; color: #6b7280;">Total Bookings</p>
+        </div>
+        <div style="text-align: center; padding: 1rem; background-color: #f9fafb; border-radius: 0.5rem;">
+            <p style="font-size: 2rem; font-weight: 700; color: var(--desert-600);">@Model.CompletedJourneys</p>
+            <p style="font-size: 0.875rem; color: #6b7280;">Completed Journeys</p>
+        </div>
+        <div style="text-align: center; padding: 1rem; background-color: #f9fafb; border-radius: 0.5rem;">
+            <p style="font-size: 2rem; font-weight: 700; color: var(--desert-600);">@Model.MemberSince</p>
+            <p style="font-size: 0.875rem; color: #6b7280;">Member Since</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

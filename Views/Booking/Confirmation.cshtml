@@ -1,0 +1,159 @@
+@model DesertPaths.ViewModels.BookingConfirmationViewModel
+@{
+    ViewData["Title"] = "Booking " + (Model.IsPaid ? "Confirmed" : "Received");
+    var isPayOnArrival = Model.PaymentMethod == "OnArrival";
+}
+
+<section class="section" style="min-height: 80vh; display: flex; align-items: center;">
+    <div class="container" style="max-width: 600px;">
+        <div class="card" style="padding: 2.5rem; text-align: center;">
+            <!-- Success Icon -->
+            <div style="width: 4rem; height: 4rem; background-color: @(Model.IsPaid ? "#d1fae5" : "#fef3c7"); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                @if (Model.IsPaid)
+                {
+                    <svg width="32" height="32" fill="none" stroke="#059669" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                }
+                else
+                {
+                    <svg width="32" height="32" fill="none" stroke="#d97706" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                }
+            </div>
+
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">
+                @(Model.IsPaid ? "Booking Confirmed!" : "Booking Received!")
+            </h1>
+            <p style="color: #6b7280; margin-bottom: 2rem;">
+                @if (Model.IsPaid)
+                {
+                    <text>Thank you for your payment. Your booking is confirmed!</text>
+                }
+                else if (isPayOnArrival)
+                {
+                    <text>Thank you! Our team will contact you at <strong>@Model.ContactPhone</strong> to confirm your booking.</text>
+                }
+                else
+                {
+                    <text>Please complete your payment to confirm your booking.</text>
+                }
+            </p>
+
+            <!-- Booking Reference -->
+            <div style="background-color: #f3f4f6; border-radius: 0.5rem; padding: 1rem; margin-bottom: 2rem;">
+                <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 0.25rem;">Booking Reference</p>
+                <p style="font-family: monospace; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.05em;">@Model.BookingReference</p>
+            </div>
+
+            <!-- Booking Details -->
+            <div style="text-align: left; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1.5rem; margin-bottom: 2rem;">
+                <h3 style="font-weight: 600; margin-bottom: 1rem;">Booking Details</h3>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <p style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase;">Journey</p>
+                        <p style="font-weight: 500;">@Model.JourneyTitle</p>
+                    </div>
+                    <div>
+                        <p style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase;">Destination</p>
+                        <p style="font-weight: 500;">@Model.LandName</p>
+                    </div>
+                    <div>
+                        <p style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase;">Travel Date</p>
+                        <p style="font-weight: 500;">@Model.TravelDate.ToString("dddd, MMMM dd, yyyy")</p>
+                    </div>
+                    <div>
+                        <p style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase;">Travel Style</p>
+                        <p style="font-weight: 500;">@Model.StyleName</p>
+                    </div>
+                    <div>
+                        <p style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase;">Guests</p>
+                        <p style="font-weight: 500;">@Model.NumberOfGuests @(Model.NumberOfGuests == 1 ? "person" : "people")</p>
+                    </div>
+                    <div>
+                        <p style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase;">Status</p>
+                        <p>
+                            <span style="display: inline-block; padding: 0.25rem 0.75rem; font-size: 0.75rem; font-weight: 600; border-radius: 9999px; 
+                                @(Model.Status == "Confirmed" ? "background-color: #d1fae5; color: #065f46;" : "background-color: #fef3c7; color: #92400e;")">
+                                @Model.Status
+                            </span>
+                        </p>
+                    </div>
+                    <div>
+                        <p style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase;">Payment</p>
+                        <p>
+                            @if (Model.IsPaid)
+                            {
+                                <span style="display: inline-block; padding: 0.25rem 0.75rem; font-size: 0.75rem; font-weight: 600; border-radius: 9999px; background-color: #d1fae5; color: #065f46;">
+                                    ✓ Paid
+                                </span>
+                            }
+                            else if (isPayOnArrival)
+                            {
+                                <span style="display: inline-block; padding: 0.25rem 0.75rem; font-size: 0.75rem; font-weight: 600; border-radius: 9999px; background-color: #e0e7ff; color: #3730a3;">
+                                    Pay on Arrival
+                                </span>
+                            }
+                            else
+                            {
+                                <span style="display: inline-block; padding: 0.25rem 0.75rem; font-size: 0.75rem; font-weight: 600; border-radius: 9999px; background-color: #fef3c7; color: #92400e;">
+                                    Awaiting Payment
+                                </span>
+                            }
+                        </p>
+                    </div>
+                    <div>
+                        <p style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase;">Contact</p>
+                        <p style="font-weight: 500; font-size: 0.875rem;">@Model.CustomerEmail<br/>@Model.ContactPhone</p>
+                    </div>
+                </div>
+
+                <div style="border-top: 1px solid #e5e7eb; margin-top: 1rem; padding-top: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 600;">Total Amount</span>
+                        <span style="font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--desert-600);">
+                            $@Model.TotalPrice.ToString("N0")
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- What's Next -->
+            <div style="background-color: var(--desert-50); border-radius: 0.5rem; padding: 1.5rem; margin-bottom: 2rem; text-align: left;">
+                <h3 style="font-weight: 600; margin-bottom: 0.75rem; color: var(--desert-800);">What's Next?</h3>
+                <ul style="color: var(--desert-700); font-size: 0.875rem; margin-left: 1.25rem;">
+                    @if (isPayOnArrival)
+                    {
+                        <li style="margin-bottom: 0.5rem;">Our team will call you within 24 hours to confirm your booking</li>
+                        <li style="margin-bottom: 0.5rem;">You'll receive a detailed itinerary and packing guide via email</li>
+                        <li>Payment can be made in cash or card on arrival</li>
+                    }
+                    else if (!Model.IsPaid)
+                    {
+                        <li style="margin-bottom: 0.5rem;">Complete your payment to secure your booking</li>
+                        <li style="margin-bottom: 0.5rem;">Once paid, you'll receive a detailed itinerary via email</li>
+                        <li>Contact us if you have any questions</li>
+                    }
+                    else
+                    {
+                        <li style="margin-bottom: 0.5rem;">Your booking is confirmed - no further action needed!</li>
+                        <li style="margin-bottom: 0.5rem;">You'll receive a detailed itinerary and packing guide via email</li>
+                        <li>Our guide will contact you 2 days before your journey</li>
+                    }
+                </ul>
+            </div>
+
+            <!-- Actions -->
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                @if (!Model.IsPaid && !isPayOnArrival)
+                {
+                    <a asp-controller="Payment" asp-action="Checkout" asp-route-bookingId="@Model.BookingId" class="btn-primary">Pay Now</a>
+                }
+                <a asp-action="MyBookings" class="@(!Model.IsPaid && !isPayOnArrival ? "btn-outline" : "btn-primary")">View My Bookings</a>
+                <a asp-controller="Journeys" asp-action="Index" class="btn-outline">Explore More Journeys</a>
+            </div>
+        </div>
+    </div>
+</section>

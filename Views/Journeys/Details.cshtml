@@ -1,0 +1,255 @@
+@model DesertPaths.Models.Entities.Journey
+@{
+    ViewData["Title"] = Model.Title;
+    var styles = ViewBag.Styles as List<DesertPaths.Models.Entities.JourneyStyle>;
+}
+
+<!-- Hero Section -->
+<section class="hero" style="min-height: 70vh; background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('@(Model.HeroImageUrl ?? "https://images.unsplash.com/photo-1547234935-80c7145ec969?w=1920&h=1080&fit=crop")'); background-size: cover; background-position: center;">
+    <div class="hero-content">
+        <span class="badge badge-secondary" style="margin-bottom: 1rem;">@Model.Land.Name</span>
+        <h1 class="hero-title">@Model.Title</h1>
+        <p class="hero-subtitle">@Model.ShortDescription</p>
+        <div style="display: flex; gap: 2rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;">
+            <div style="text-align: center;">
+                <div style="font-size: 2rem; font-weight: 700;">@Model.DurationDays</div>
+                <div style="color: var(--sand-300); font-size: 0.875rem;">Days</div>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2rem; font-weight: 700;">@Model.DurationNights</div>
+                <div style="color: var(--sand-300); font-size: 0.875rem;">Nights</div>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2rem; font-weight: 700;">@Model.MaxGroupSize</div>
+                <div style="color: var(--sand-300); font-size: 0.875rem;">Max Group</div>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2rem; font-weight: 700;">$@Model.PriceFrom.ToString("N0")</div>
+                <div style="color: var(--sand-300); font-size: 0.875rem;">From</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container" style="display: grid; grid-template-columns: 1fr; gap: 2rem; padding: 3rem 1rem;">
+    @* On larger screens, use 2 columns *@
+    <style>
+        @@media (min-width: 1024px) {
+            .journey-grid {
+                grid-template-columns: 2fr 1fr !important;
+            }
+        }
+    </style>
+    
+    <div class="journey-grid" style="display: grid; grid-template-columns: 1fr; gap: 2rem;">
+        <!-- Main Content -->
+        <div>
+            <!-- Description -->
+            <section style="margin-bottom: 3rem;">
+                <h2 class="section-title" style="font-size: 1.75rem; margin-bottom: 1rem;">About This Journey</h2>
+                <div style="color: #4b5563; line-height: 1.8;">
+                    @if (!string.IsNullOrEmpty(Model.FullDescription))
+                    {
+                        @Html.Raw(Model.FullDescription)
+                    }
+                    else
+                    {
+                        <p>@Model.ShortDescription</p>
+                    }
+                </div>
+            </section>
+            
+            <!-- Itinerary -->
+            @if (Model.Itineraries.Any())
+            {
+                <section style="margin-bottom: 3rem;">
+                    <h2 class="section-title" style="font-size: 1.75rem; margin-bottom: 1.5rem;">Day by Day Itinerary</h2>
+                    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        @foreach (var day in Model.Itineraries)
+                        {
+                            <div class="card" style="padding: 1.5rem;">
+                                <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                                    <div style="background-color: var(--desert-600); color: white; width: 3rem; height: 3rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">
+                                        @day.DayNumber
+                                    </div>
+                                    <div>
+                                        <h3 style="font-weight: 600; margin-bottom: 0.5rem;">@day.Title</h3>
+                                        <p style="color: #6b7280;">@day.Description</p>
+                                        @if (!string.IsNullOrEmpty(day.Highlights))
+                                        {
+                                            <p style="color: var(--desert-600); font-size: 0.875rem; margin-top: 0.5rem;">
+                                                <strong>Highlights:</strong> @day.Highlights
+                                            </p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </section>
+            }
+            
+            <!-- Reviews -->
+            @if (Model.Reviews.Any())
+            {
+                <section>
+                    <h2 class="section-title" style="font-size: 1.75rem; margin-bottom: 1.5rem;">Reviews</h2>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        @foreach (var review in Model.Reviews)
+                        {
+                            <div class="card" style="padding: 1.5rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <strong>@review.User.FullName</strong>
+                                    <div style="color: var(--sand-500);">
+                                        @for (int i = 0; i < review.Rating; i++)
+                                        {
+                                            <span>?</span>
+                                        }
+                                        @for (int i = review.Rating; i < 5; i++)
+                                        {
+                                            <span style="color: #d1d5db;">?</span>
+                                        }
+                                    </div>
+                                </div>
+                                <p style="color: #6b7280;">@review.Comment</p>
+                                <p style="font-size: 0.75rem; color: #9ca3af; margin-top: 0.5rem;">@review.CreatedAt.ToString("MMMM dd, yyyy")</p>
+                            </div>
+                        }
+                    </div>
+                </section>
+            }
+        </div>
+        
+        <!-- Booking Sidebar -->
+        <div>
+            <div class="card" style="padding: 1.5rem; position: sticky; top: 5rem;">
+                <h3 style="font-weight: 600; margin-bottom: 1rem;">Book This Journey</h3>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <div class="price" style="font-size: 2rem;">
+                        <span class="price-from" style="font-size: 0.875rem;">From</span>
+                        $@Model.PriceFrom.ToString("N0")
+                    </div>
+                    <p style="font-size: 0.875rem; color: #6b7280;">per person</p>
+                </div>
+                
+                @if (styles != null && styles.Any())
+                {
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="font-weight: 500; display: block; margin-bottom: 0.5rem;">Travel Style</label>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            @foreach (var style in styles)
+                            {
+                                <div style="border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 0.75rem;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <strong>@style.Name</strong>
+                                        <span style="color: var(--desert-600);">
+                                            $@((Model.PriceFrom * style.PriceMultiplier).ToString("N0"))
+                                        </span>
+                                    </div>
+                                    <p style="font-size: 0.75rem; color: #6b7280;">@style.Description</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                
+                <a asp-controller="Booking" asp-action="Create" asp-route-slug="@Model.Slug" class="btn-primary" style="width: 100%; text-align: center; display: block;">
+                    Book Now
+                </a>
+
+                <p style="font-size: 0.75rem; color: #9ca3af; text-align: center; margin-top: 1rem;">
+                    Free cancellation up to 14 days before departure
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reviews Section -->
+@if (Model.Reviews.Any())
+{
+    <section class="section" style="background-color: #f9fafb;">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: #111827; margin-bottom: 0.5rem;">
+                    Traveler Reviews
+                </h2>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    <div style="display: flex; color: #f59e0b;">
+                        @{
+                            var avgRating = Model.Reviews.Average(r => r.Rating);
+                            for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= avgRating)
+                                {
+                                    <span>★</span>
+                                }
+                                else if (i - 0.5 <= avgRating)
+                                {
+                                    <span style="opacity: 0.5;">★</span>
+                                }
+                                else
+                                {
+                                    <span style="color: #d1d5db;">★</span>
+                                }
+                            }
+                        }
+                    </div>
+                    <span style="font-weight: 600;">@avgRating.ToString("F1")</span>
+                    <span style="color: #6b7280;">(@Model.Reviews.Count @(Model.Reviews.Count == 1 ? "review" : "reviews"))</span>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; max-width: 1000px; margin: 0 auto;">
+                @foreach (var review in Model.Reviews.OrderByDescending(r => r.CreatedAt).Take(6))
+                {
+                    <div class="card" style="padding: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <div style="width: 40px; height: 40px; background-color: var(--desert-100); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    <span style="font-weight: 600; color: var(--desert-700);">
+                                        @(review.User.FirstName?[0].ToString().ToUpper() ?? "U")
+                                    </span>
+                                </div>
+                                <div>
+                                    <p style="font-weight: 600;">@review.User.FirstName @review.User.LastName?[0].</p>
+                                    <p style="font-size: 0.75rem; color: #6b7280;">@review.CreatedAt.ToString("MMMM yyyy")</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; color: #f59e0b; font-size: 0.875rem;">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <span style="color: @(i <= review.Rating ? "#f59e0b" : "#d1d5db");">★</span>
+                                }
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(review.Comment))
+                        {
+                            <p style="color: #4b5563; line-height: 1.6;">
+                                "@review.Comment"
+                            </p>
+                        }
+                        else
+                        {
+                            <p style="color: #9ca3af; font-style: italic;">
+                                No written comment
+                            </p>
+                        }
+                    </div>
+                }
+            </div>
+
+            @if (Model.Reviews.Count > 6)
+            {
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button onclick="document.getElementById('allReviews').style.display = 'block'; this.style.display = 'none';" 
+                            class="btn-outline">
+                        Show All @Model.Reviews.Count Reviews
+                    </button>
+                </div>
+            }
+        </div>
+    </section>
+}
